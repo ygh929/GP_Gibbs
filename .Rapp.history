@@ -1,0 +1,740 @@
+newDat$X1[i, ]
+newDat$X1
+newDat=list(X1=matrix(NA,nrow=m,ncol=nc),X2=matrix(NA,nrow=m,ncol=nc))
+newDat$X1
+newDat$X1[1,]
+Dat[i1,]
+newDat$X1[1,]=Dat[i1,]
+newDat$X1
+newDat=list(X1=as.dataframe(matrix(NA,nrow=m,ncol=nc)),X2=matrix(NA,nrow=m,ncol=nc))
+newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=matrix(NA,nrow=m,ncol=nc))
+newDat$X1[1,]=Dat[i1,]
+newDat$X1[1,]
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+samplepairs(10,Dat,Dat[,2])
+Dat[,1]
+factor(Dat[,1])
+newDat$X1
+newDat$X1=samplepairs(10,Dat,Dat[,2])
+newDat$X1
+newDat$X2
+rm(list=ls())
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+newDat=samplepairs(10,Dat,Dat[,2])
+Dat=read.table("abalone.data",sep=",")
+newDat=samplepairs(10,Dat,Dat[,2])
+newDat$X1
+newDat$X1[,1]
+newDat$X1-newDat$X2
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		colnames(newDat$X1)=colnames(Dat)#
+		colnames(newDat$X2)=colnames(Dat)#
+		if (y[i1]>y[i2]){#
+			newDat$X1[i,]=Dat[i1,]#
+			newDat$X2[i,]=Dat[i2,]#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X2[i,]=Dat[i1,]#
+			newDat$X1[i,]=Dat[i2,]#
+			i=i+1			#
+		}#
+	}#
+	newDat#
+}
+newDat=samplepairs(10,Dat,Dat[,2])
+Dat[1,]
+typeof(Dat[1,])
+typeof(Dat[1,1])
+Dat[1,1]
+Dat[1,1]+1
+newDat$X1[1,1]+1
+newDat$X1[1,]=Dat[1,]
+newDat$1
+newDat$X1
+X=as.data.frame(matrix(NA,1,9))
+X=Dat[1,]
+X
+X=as.data.frame(matrix(NA,2,9))
+X=Dat[1,]
+X
+X=Dat[2,]
+X
+X=as.data.frame(matrix(NA,2,9))
+X[1,]=Dat[2,]
+X
+as.data.frame()
+as.data.frame(NULL)
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL)#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i1,])#
+			newDat$X2=rbind(newDat$X2,Dat[i2,])#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i2,])#
+			newDat$X2=rbind(newDat$X2,Dat[i1,])#
+			i=i+1			#
+		}#
+	}#
+	colnames(newDat$X1)=colnames(Dat)#
+	colnames(newDat$X2)=colnames(Dat)#
+	newDat#
+}
+sample pairs from the data#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i1,])#
+			newDat$X2=rbind(newDat$X2,Dat[i2,])#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i2,])#
+			newDat$X2=rbind(newDat$X2,Dat[i1,])#
+			i=i+1			#
+		}#
+	}#
+	colnames(newDat$X1)=colnames(Dat)#
+	colnames(newDat$X2)=colnames(Dat)#
+	newDat#
+}
+Test=samplepairs(10,Dat,Dat[,2])
+Test
+factor(Test$X1[,1])
+model.matrix(1~Test$X1)
+model.matrix(Test$X1$V2~Test$X1$V1)
+typeof(Test$X1[,1])
+typeof(Test$X1[,2])
+typeof(Test$X1[,3])
+typeof(Test$X1[,9])
+is.factor(Test$X1[,1])
+is.factor(Test$X1[,9])
+m <- cbind(1, 1:7) # the '1' (= shorter vector) is recycled#
+m#
+m <- cbind(m, 8:14)[, c(1, 3, 2)] # insert a column#
+m
+is.factor(Dat)
+is.factor(Dat[,1:3])
+find=sapply(Dat,is.factor)
+find
+rm('find')
+fac.ind=sapply(Dat,is.factor)
+Dat[fac.ind]
+fac.ind[2]=T
+Dat[fac.ind]
+Dat[,2]=Dat[,1]
+fac.ind=sapply(Dat,is.factor)
+fac.ind
+fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~fDat)
+y=Dat[,9]
+fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~fDat)
+fDat
+fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~fDat)
+dummys=model.matrix(y~.,data=fDat)
+dummys
+dummys=dummys[,2:ncol(dummys)]
+Dat=Dat[,-fac.ind]
+Dat
+ncol(Dat)
+Dat=Dat[,-fac.ind]
+ncol(Dat)
+fac.ind
+Dat=Dat[,-fac.ind]
+ncol(Dat)
+Dat=read.table("abalone.data",sep=",")
+fac.ind=sapply(Dat,is.factor)#
+	fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~.,data=fDat)#
+	dummys=dummys[,2:ncol(dummys)]#
+	Dat=Dat[,-fac.ind]
+Dat
+sample pairs from the data#
+Dat=read.table("abalone.data",sep=",")#
+Dat[,2]=Dat[,1]
+fac.ind=sapply(Dat,is.factor)#
+	fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~.,data=fDat)#
+	dummys=dummys[,2:ncol(dummys)]#
+	Dat=Dat[,-fac.ind]
+ncol(Dat)
+Dat=read.table("abalone.data",sep=",")#
+Dat[,2]=Dat[,1]
+ncol(Dat)
+fac.ind=sapply(Dat,is.factor)#
+	fDat=Dat[fac.ind]
+fac.ind
+matrix(NA,nrow=1,ncol=9)
+Temp=matrix(NA,nrow=1,ncol=9)
+Temp[,-fac.ind]
+Temp=matrix(1:9,nrow=1,ncol=9)
+Temp[,-fac.ind]
+-fac.ind
+find(fac.ind==1)
+find(fac.ind,1)
+fac.ind==1
+where(fac.ind==1)
+match(1,fac.ind)
+which(1,fac.ind)
+which(1 %in% fac.ind)
+which(fac.ind==1)
+Dat
+dummys=dummys[,2:ncol(dummys)]#
+	Dat=Dat[,-which(fac.ind==1)]
+ncol(Dat)
+sample pairs from the data#
+Dat=read.table("abalone.data",sep=",")#
+Dat[,2]=Dat[,1]#
+#
+samplepairs<-function(m,Dat,y){#
+	nr=dim(Dat)[1]#
+	nc=dim(Dat)[2]#
+	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
+	fac.ind=sapply(Dat,is.factor)#
+	fDat=Dat[fac.ind]#
+	dummys=model.matrix(y~.,data=fDat)#
+	dummys=dummys[,2:ncol(dummys)]#
+	Dat=Dat[,-which(fac.ind==1)]#
+	Dat=cbind(Dat,dummys)#
+	i=1#
+	while (i<=m){#
+		i1=sample(1:nr,1)#
+		i2=sample(1:nr,1)#
+		if (y[i1]>y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i1,])#
+			newDat$X2=rbind(newDat$X2,Dat[i2,])#
+			i=i+1#
+		}#
+		if (y[i1]<y[i2]){#
+			newDat$X1=rbind(newDat$X1,Dat[i2,])#
+			newDat$X2=rbind(newDat$X2,Dat[i1,])#
+			i=i+1			#
+		}#
+	}#
+	colnames(newDat$X1)=colnames(Dat)#
+	colnames(newDat$X2)=colnames(Dat)#
+	newDat#
+}
+Dat=read.table("abalone.data",sep=",")
+samplepairs(10,Dat,Dat[,2])
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone",sep=":")$V1
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1
+samplepairs(10,Dat,Dat[,2])
+Test=samplepairs(10,Dat,Dat[,2])
+x1=Test$X1[1,]
+x2=Test$X2[1,]
+sum((x1-x2)^2)
+kernel1<-function(x1,x2,kappa){#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}
+levels(x1)
+levels(Test$X1[,4])
+levels(Test$X1[,9])
+nlevels(x1)
+x1
+nlevels(Test$X1[,4])
+nlevels(Test$X1[,9])
+unique(Test$X1[,4])
+unique(Test$X1[,9])
+x0=matrix(NA,0,0)
+x0=cbind(x0,1)
+newx=as.data.frame(matrix(NA,nrwo(x),0))
+unique(Test$X1[,9])
+length(unique(Test$X1[,9]))
+Test$X1[,9]^2
+Test$X1[,9]^3
+Test$X1[,9]^1:3
+sapply(Test$X1[,9],^1:3)
+2^1:3
+2^(1:3)
+Test$X1[,9]^(1:3)
+library(splines)
+x1
+bs(x1)
+bs(Test$X1[,5])
+bs(Test$X1[,5],knots)
+bs(Test$X1[,5])
+bs(Test$X1[,5])[[1]]
+bs(Test$X1[,5])$
+bs(Test$X1[,5])*2
+bs
+range(x)
+range(x1)
+x1
+k=2
+tempx=Temp$X1[,2]
+Test$X1
+Test$X1[,2]
+tempx=Test$X1[,2]
+xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
+xi
+k
+tempx
+tempx-xi
+outer(tempx,xi,-)
+outer(tempx,xi,'-')
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx)<=2){#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+}
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx)<=2)){#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx)<=2)){#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+Test$X1
+j=2
+tempx=x[,j]
+tempx=Test$X1[,j]
+tempx
+length(unique(tempx)
+)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+outer('1',1:3,paste())
+outer('1',1:3,'paste()'')
+outer('1',1:3,'paste()')
+?sprintf
+sprintf("%i",1:3)
+sprintf("a","%i",1:3)
+sprintf("a%i",1:3)
+a='x'
+sprintf(a"%i",1:3)
+sprintf(a,"%i",1:3)
+sprintf("&s%i",a,1:3)
+sprintf("%s %i",a,1:3)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			colnames(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			colnames(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+			print(tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			names(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			print(colnames(addx))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
+			print(colnames(x[,j]))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
+			print(colnames(x)[j]#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x[,j])#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
+			print(colnames(x)[j])#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,1)
+cubicspl(Test$X1,2)
+x
+x=Test$X1[,j]
+x
+tempx=x
+xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
+k
+addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3
+x=Test$X1
+addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3
+addx
+xi
+outer(tempx,xi,'-')
+max(0,outer(tempx,xi,'-'))
+outer(0,outer(tempx,xi,'-'),'max()')
+outer(0,outer(tempx,xi,'-'),'max')
+o=outer(tempx,xi,'-')
+o
+sapply(o,max)
+max(1,2)
+o>0
+o*(o>0)
+cubicspl<-function(x,k){#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+3)#
+			addx[,1:3]=outer(tempx,1:3,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,4:(3+k)]=(h*(h>0))^3#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	newx#
+}
+cubicspl(Test$X1,2)
