@@ -1,13 +1,14 @@
 #sample pairs from the data
-Dat=read.table("abalone.data",sep=",")
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1
+
+library(MASS)#to generate mvrnorm
 
 samplepairs<-function(m,Dat,y){
+	#get sample of pairs from the data
+	#values in X1 is preefered to values in X2
 	nr=dim(Dat)[1]
 	nc=dim(Dat)[2]
 	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))
-	colnames(newDat$X1)=colnames(Dat)
-	colnames(newDat$X2)=colnames(Dat)
+
 	fac.ind=sapply(Dat,is.factor)
 	fDat=Dat[fac.ind]
 	dummys=model.matrix(y~.,data=fDat)
@@ -29,16 +30,63 @@ samplepairs<-function(m,Dat,y){
 			i=i+1			
 		}
 	}
+	colnames(newDat$X1)=colnames(Dat)
+	colnames(newDat$X2)=colnames(Dat)
 	newDat
 }
 
 kernel1<-function(x1,x2,kappa=1){
+	#kernal function to generate Sigma
 	k=sum((x1-x2)^2)
 	K=exp(-kappa*k/2)
 	K
 }
 
+getSigma<-function(x,ker){
+	#Get the covariance function given x values and kernel
+	n=nrow(x)
+	Sigma=matrix(1,n,n)
+	for (i in 2:n){
+		for (j in 1:(i-1)){
+			Sigma[i,j]=ker(x[i,],x[j,])
+			Sigma[j,i]=Sigma[i,j]
+		}
+	}	
+	Sigma
+}
+
+getcov<-function(xt,x,ker){
+	#x is all the observed n (we use 2m here) locations and xt is the new pair
+	n=nrow(x)
+	Sigma=matrix(1,n,2)
+	for (i in 1:n){
+		for (j in 1:2){
+			Sigma[i,j]=ker(x[i,],xt[j,])
+		}
+	}
+	Sigma
+}
+
+pre_GP<-function(coSig,Sig,f){
+	
+	Y=t(coSig)%*%Sig%*%matrix(f,ncol=1)
+	Y
+}
+normto1<-function(x){
+	normDat=list(X1=NULL,X2=NULL)
+	Tdata=rbind(x$X1,x$X2)
+	ran=sapply(Tdata,range)
+	for (j in 1:ncol(Tdata)){
+		Tdata[,j]=(Tdata[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2
+	}
+	m=nrow(x[[1]])
+	normDat$X1=Tdata[1:m,]-1
+	normDat$X2=Tdata[(m+1):(2*m),]-1
+	list(normDat=normDat,ran=ran)
+}
+
 cubicspl<-function(x,k){
+	#function to get cubic splines with k knots in each dimension
 	newx=as.data.frame(matrix(NA,nrow(x),0))
 	for (j in 1:ncol(x)){
 		tempx=x[,j]
@@ -56,6 +104,14 @@ cubicspl<-function(x,k){
 			newx=cbind(newx,addx)	
 		}
 	}
+	rownames(newx)=rownames(x)
 	newx
 }
+
+losssum<-function(est){
+	#est has two elements in the list $Y1 and $Y2
+	S=sum(est$Y2>est$Y1)
+	S
+}
+
 
