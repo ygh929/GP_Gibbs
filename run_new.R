@@ -1,8 +1,9 @@
-Dat=read.table("abalone.data",sep=",")
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1
+Dat=read.table("pyrim.data",sep=",")
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1
 source("./functions.r")
-y=Dat[,9]
-Dat=Dat[,1:8]
+nc=ncol(Dat)
+y=Dat[,nc]
+Dat=Dat[,1:(nc-1)]
 
 
 m=100 #number of pairs in training data

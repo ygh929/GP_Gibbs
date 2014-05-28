@@ -10,11 +10,14 @@ samplepairs<-function(m,Dat,y){
 	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))
 
 	fac.ind=sapply(Dat,is.factor)
-	fDat=Dat[fac.ind]
-	dummys=model.matrix(y~.,data=fDat)
-	dummys=dummys[,2:ncol(dummys)]
-	Dat=Dat[,-which(fac.ind==1)]
-	Dat=cbind(Dat,dummys)
+	if (sum(fac.ind)>0){
+		fDat=Dat[fac.ind]
+		dummys=model.matrix(y~.,data=fDat)
+		dummys=dummys[,2:ncol(dummys)]
+		Dat=Dat[,-which(fac.ind==1)]
+		Dat=cbind(Dat,dummys)
+	}
+	
 	i=1
 	while (i<=m){
 		i1=sample(1:nr,1)
@@ -35,7 +38,7 @@ samplepairs<-function(m,Dat,y){
 	newDat
 }
 
-kernel1<-function(x1,x2,kappa=1){
+kernel1<-function(x1,x2,kappa=3){
 	#kernal function to generate Sigma
 	k=sum((x1-x2)^2)
 	K=exp(-kappa*k/2)
@@ -89,10 +92,10 @@ loss_GP=function(fI,pairs){
 	
 SA_GP<-function(cDat){
 	#try to minimize q=l-log(p)
-	kmax=1e4
-	kappa=10
+	kmax=1e5
+	kappa=1
 	sig=0.5 #initial jump sd
-	tol=1e5 #initial tol
+	tolc=1 #initial tol
 	x=cDat$points
 	pairs=cDat$pairs
 	Sig=getSigma(x,kernel1)
@@ -101,40 +104,37 @@ SA_GP<-function(cDat){
 	#initialize
 	fI=rmvnorm(1,rep(0,n),Sig)
 	fI=fI/sqrt(sum(fI^2))*r
-	q=kappa*loss_GP(fI,pairs)#-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
-	print(q)
+	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
+	count=0
 	#move
 	for (k in 1:kmax){
-		count=0
-		newfI=rmvnorm(1,rep(0,n),Sig)
-		newFi=newfI/sqrt(sum(newfI^2))*r
-		newq=kappa*loss_GP(newfI,pairs)#-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
-		print(newq)
-		if ((newq-tol)<q){
-			temp=runif(1,0,1)
-			if (temp<(exp(q-newq))){
-				fI=newfI
-				q=newq
-				count=count+1
-			}
+
+		newfI=MoveonSph(fI,sig,r)
+		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
+	
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			fI=newfI
+			q=newq
+			count=count+1
 		}
-		if (k%%100==0){
+		if ((k%%1000)==0){
 			#adjust tol and sig by accept rate
-			accrate=count/100
-			if (accrate>0.5){
-				tol=tol/2
+			accrate=count/1000
+			if (accrate>0.2){
+				tolc=tolc*5
 			}
 			if (accrate<0.2){
-				#sig=sig/2
+				sig=sig*0.75
 			}
 			if (accrate==0){
-				#break
+				break
 			}
-			count=0
 			print(accrate)
+			count=0
 		}
 	}
-	list(fI=fI,Sig=Sig,L=loss_GP(fI,pairs))
+	list(fI=fI,Sig=Sig,q=q)
 }
 
 
@@ -163,7 +163,12 @@ normto1<-function(x){
 	Tdata=rbind(x$X1,x$X2)
 	ran=sapply(Tdata,range)
 	for (j in 1:ncol(Tdata)){
-		Tdata[,j]=(Tdata[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2
+		if (ran[1,j]!=ran[2,j]){
+			Tdata[,j]=(Tdata[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2
+		}else{
+			Tdata[,j]=Tdata[,j]-ran[1,j]
+		}
+		
 	}
 	m=nrow(x[[1]])
 	normDat$X1=Tdata[1:m,]-1
@@ -174,11 +179,16 @@ normbyran<-function(x,ran){
 	Tdat=rbind(x$X1,x$X2)
 	nr=nrow(x$X1)
 	nc=ncol(Tdat)
-	for (j in 1:nc){
-		Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2-1
+	for (j in 1:ncol(Tdat)){
+		if (ran[1,j]!=ran[2,j]){
+			Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2
+		}else{
+			Tdat[,j]=Tdat[,j]-ran[1,j]
+		}
+		
 	}
-	x$X1=Tdat[1:nr,]
-	x$X2=Tdat[(nr+1):(2*nr),]
+	x$X1=Tdat[1:nr,]-1
+	x$X2=Tdat[(nr+1):(2*nr),]-1
 	x
 }
 cubicspl<-function(x,k){
