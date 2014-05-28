@@ -1,740 +1,1245 @@
-newDat$X1[i, ]
-newDat$X1
-newDat=list(X1=matrix(NA,nrow=m,ncol=nc),X2=matrix(NA,nrow=m,ncol=nc))
-newDat$X1
-newDat$X1[1,]
-Dat[i1,]
-newDat$X1[1,]=Dat[i1,]
-newDat$X1
-newDat=list(X1=as.dataframe(matrix(NA,nrow=m,ncol=nc)),X2=matrix(NA,nrow=m,ncol=nc))
-newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=matrix(NA,nrow=m,ncol=nc))
-newDat$X1[1,]=Dat[i1,]
-newDat$X1[1,]
-sample pairs from the data#
+dev.new()
+trian=get_dens(Dat,metric)#
 #
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Dat
+metric=function(x,y){#
+	return(abs(x-y)^2)#
 }
-sample pairs from the data#
+metric=function(x,y){#
+	return(abs(x-y)^2)#
+}#
 #
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
-}
-sample pairs from the data#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
 #
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
+#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}#
+#
+trian=get_dens(Dat,metric)#
+#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))
+grade.trellis()
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+I(1!=2)
+I(1!=2)*1
+metric=function(x,y){#
+	return(1*I(x!=y))#
 }
-samplepairs(10,Dat,Dat[,2])
-Dat[,1]
-factor(Dat[,1])
-newDat$X1
-newDat$X1=samplepairs(10,Dat,Dat[,2])
-newDat$X1
-newDat$X2
+trian=get_dens(Dat,metric)
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+?levelplot
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)),default.theme=standard.theme(color=F))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=tray(0:100/100)#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/20),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         col=graey(sqe(100,200,20)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=graey(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         #par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+y1
+min(trian$y1)
+min(trian$y2)
+min(trian$y3)
+require(mixexp)#
+#
+l1=function(Dat,p){#
+	#likelihood function#
+	l=matrix(Dat,1,3)%*%as.matrix(log(p),1,3)#
+	return(l)#
+}#
+#
+l2=function(Dat,metric,p){#
+	#expectation of loss function#
+	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
+	return(l)#
+}#
+#
+l3=function(Dat,metric,p){#
+	#original loss function#
+	rhat=which.max(p)#
+	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
+	return(l)#
+}#
+#
+metric=function(x,y){#
+	return((x-y)^2)#
+}#
+#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
+#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.,label="p3",pos=1)#
+trellis.unfocus()
+trian=get_dens(Dat,metric)#
+#
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+vc=6#
+eps=0.01#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+e^(n*eps^2)/256
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+exp((n*eps^2)/256)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^vc#
+exp((n*eps^2)/256)
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=10 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+setwd(' ~/Desktop/ranking/code/GP_Gibbs')
+setwd('~/Desktop/ranking/code/GP_Gibbs')
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=10 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+mean(err)
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=10 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=2*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+mean(err)
+m=10 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=3*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=1*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+mean(err)
+m=20 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=2*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+m=20 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=1*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+mean(er)
+mean(err)
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=1*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+Dat=read.table("abalone.data",sep=",")#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#GP approach_sampling#
+x=rbind(newDat$X1,newDat$X2)#
+Sig=getSigma(x,kernel1)#
+p=ncol(newDat$X1)#
+post=list(Y1=NULL,Y2=NULL)#
+est=list(Y1=1:m,Y2=1:m)#
+i=1#
+while (i<=N){#
+	Y=mvrnorm(1,rep(0,2*m),Sig)#
+	est$Y1=Y[1:m]#
+	est$Y2=Y[(m+1):(2*m)]#
+	S=1*losssum(est)#
+	temp=runif(1,0,1)#
+	if (temp<(exp(-S))){#
+		post$Y1=cbind(post$Y1,est$Y1)#
+		post$Y2=cbind(post$Y2,est$Y2)#
+		i=i+1#
+	}#
+	print(i)#
+}#
+post_GP=post#
+#
+err=(1:tm)*0#
+for (i in 1:tm){#
+	xt=rbind(tDat$X1[i,],tDat$X2[i,])#
+	coSig=getcov(xt,x,kernel1)#
+	tempY=matrix(NA,nrow=2,ncol=ncol(post$Y1))#
+	for (j in 1:ncol(post$Y1)){#
+		f=cbind(post$Y1[,j],post$Y2[,j])#
+		tempY[,j]=pre_GP(coSig,Sig,f)#
+	}#
+	err[i]=I(mean(tempY[1,])<mean(tempY[2,]))#
+}
+1.25*0.75
+MoveonSph=function(pos,sig){#
+	p=length(pos)#
+	newpos=pos+rnorm(p,0,sig)#
+	newpos=newpos/sqrt(sum(newpos^2))#
+}
+poss=c(1,2,3)
+MoveonSph(poss,0.1)
+MoveonSph=function(pos,sig){#
+	p=length(pos)#
+	newpos=pos+rnorm(p,0,sig)#
+	newpos=newpos/sqrt(sum(newpos^2))#
+	newpos#
+}
+MoveonSph(poss,0.1)
+sum(MoveonSph(poss,0.1)^2)
 rm(list=ls())
-sample pairs from the data#
-#
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
-}
-sample pairs from the data#
-#
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
-}
-newDat=samplepairs(10,Dat,Dat[,2])
-Dat=read.table("abalone.data",sep=",")
-newDat=samplepairs(10,Dat,Dat[,2])
-newDat$X1
-newDat$X1[,1]
-newDat$X1-newDat$X2
-sample pairs from the data#
-#
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(matrix(NA,nrow=m,ncol=nc)),X2=as.data.frame(matrix(NA,nrow=m,ncol=nc)))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		colnames(newDat$X1)=colnames(Dat)#
-		colnames(newDat$X2)=colnames(Dat)#
-		if (y[i1]>y[i2]){#
-			newDat$X1[i,]=Dat[i1,]#
-			newDat$X2[i,]=Dat[i2,]#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X2[i,]=Dat[i1,]#
-			newDat$X1[i,]=Dat[i2,]#
-			i=i+1			#
-		}#
-	}#
-	newDat#
-}
-newDat=samplepairs(10,Dat,Dat[,2])
-Dat[1,]
-typeof(Dat[1,])
-typeof(Dat[1,1])
-Dat[1,1]
-Dat[1,1]+1
-newDat$X1[1,1]+1
-newDat$X1[1,]=Dat[1,]
-newDat$1
-newDat$X1
-X=as.data.frame(matrix(NA,1,9))
-X=Dat[1,]
-X
-X=as.data.frame(matrix(NA,2,9))
-X=Dat[1,]
-X
-X=Dat[2,]
-X
-X=as.data.frame(matrix(NA,2,9))
-X[1,]=Dat[2,]
-X
-as.data.frame()
-as.data.frame(NULL)
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL)#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i1,])#
-			newDat$X2=rbind(newDat$X2,Dat[i2,])#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i2,])#
-			newDat$X2=rbind(newDat$X2,Dat[i1,])#
-			i=i+1			#
-		}#
-	}#
-	colnames(newDat$X1)=colnames(Dat)#
-	colnames(newDat$X2)=colnames(Dat)#
-	newDat#
-}
-sample pairs from the data#
-#
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i1,])#
-			newDat$X2=rbind(newDat$X2,Dat[i2,])#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i2,])#
-			newDat$X2=rbind(newDat$X2,Dat[i1,])#
-			i=i+1			#
-		}#
-	}#
-	colnames(newDat$X1)=colnames(Dat)#
-	colnames(newDat$X2)=colnames(Dat)#
-	newDat#
-}
-Test=samplepairs(10,Dat,Dat[,2])
-Test
-factor(Test$X1[,1])
-model.matrix(1~Test$X1)
-model.matrix(Test$X1$V2~Test$X1$V1)
-typeof(Test$X1[,1])
-typeof(Test$X1[,2])
-typeof(Test$X1[,3])
-typeof(Test$X1[,9])
-is.factor(Test$X1[,1])
-is.factor(Test$X1[,9])
-m <- cbind(1, 1:7) # the '1' (= shorter vector) is recycled#
-m#
-m <- cbind(m, 8:14)[, c(1, 3, 2)] # insert a column#
+set.seed(1)#
+m <- matrix( sample(12,28,repl=T) , 7 , 4 )
 m
-is.factor(Dat)
-is.factor(Dat[,1:3])
-find=sapply(Dat,is.factor)
-find
-rm('find')
-fac.ind=sapply(Dat,is.factor)
-Dat[fac.ind]
-fac.ind[2]=T
-Dat[fac.ind]
-Dat[,2]=Dat[,1]
-fac.ind=sapply(Dat,is.factor)
-fac.ind
-fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~fDat)
-y=Dat[,9]
-fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~fDat)
-fDat
-fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~fDat)
-dummys=model.matrix(y~.,data=fDat)
-dummys
-dummys=dummys[,2:ncol(dummys)]
-Dat=Dat[,-fac.ind]
-Dat
-ncol(Dat)
-Dat=Dat[,-fac.ind]
-ncol(Dat)
-fac.ind
-Dat=Dat[,-fac.ind]
-ncol(Dat)
-Dat=read.table("abalone.data",sep=",")
-fac.ind=sapply(Dat,is.factor)#
-	fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~.,data=fDat)#
-	dummys=dummys[,2:ncol(dummys)]#
-	Dat=Dat[,-fac.ind]
-Dat
-sample pairs from the data#
+m[m[,]==c(4,8,10,3)]
+m[m[,1:4]==c(4,8,10,3)]
+m[m[,1:4]==c(4,8,10,3),]
+m[m[,]==c(4,8,10,3),]
+m[m[,1]==0,]
+dim(m[m[,1]==0,])
+?which
+which(m==c(4,8,10,3))
+which(m[,]==c(4,8,10,3))
+mine <- 1:6#
+table.combos <- matrix(data = 1:12, nrow = 10, ncol = 6, byrow)#
+row.is.a.match <- apply(table.combos, 1, identical, mine)#
+match.idx <- which(row.is.a.match)#
+total.matches <- sum(row.is.a.match)
+table.combos <- matrix(data = 1:12, nrow = 10, ncol = 6, byrow=T)
+table.combos
+row.is.a.match<-apply(table.combos,1,identical,mine)
+row.is.a.match
+?apply
+?unique
+match.ix=which(row.is.a.match)
+match.ix
+m=matrix(1:10,5,2)
+m
+m[6]
+m[7]
+rm(list=ls())
 Dat=read.table("abalone.data",sep=",")#
-Dat[,2]=Dat[,1]
-fac.ind=sapply(Dat,is.factor)#
-	fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~.,data=fDat)#
-	dummys=dummys[,2:ncol(dummys)]#
-	Dat=Dat[,-fac.ind]
-ncol(Dat)
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]
 Dat=read.table("abalone.data",sep=",")#
-Dat[,2]=Dat[,1]
-ncol(Dat)
-fac.ind=sapply(Dat,is.factor)#
-	fDat=Dat[fac.ind]
-fac.ind
-matrix(NA,nrow=1,ncol=9)
-Temp=matrix(NA,nrow=1,ncol=9)
-Temp[,-fac.ind]
-Temp=matrix(1:9,nrow=1,ncol=9)
-Temp[,-fac.ind]
--fac.ind
-find(fac.ind==1)
-find(fac.ind,1)
-fac.ind==1
-where(fac.ind==1)
-match(1,fac.ind)
-which(1,fac.ind)
-which(1 %in% fac.ind)
-which(fac.ind==1)
-Dat
-dummys=dummys[,2:ncol(dummys)]#
-	Dat=Dat[,-which(fac.ind==1)]
-ncol(Dat)
-sample pairs from the data#
-Dat=read.table("abalone.data",sep=",")#
-Dat[,2]=Dat[,1]#
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
 #
-samplepairs<-function(m,Dat,y){#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
-	fac.ind=sapply(Dat,is.factor)#
-	fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~.,data=fDat)#
-	dummys=dummys[,2:ncol(dummys)]#
-	Dat=Dat[,-which(fac.ind==1)]#
-	Dat=cbind(Dat,dummys)#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i1,])#
-			newDat$X2=rbind(newDat$X2,Dat[i2,])#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i2,])#
-			newDat$X2=rbind(newDat$X2,Dat[i1,])#
-			i=i+1			#
-		}#
+newDat=samplepairs(m,Dat,y)
+convertDat(newDat)
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		temp=Points[i,]#
+		row.match=apply(Tdat,1,identical,temp)#
+		ind.match=which(row.match)#
+		pairs[ind.match]=i#
 	}#
-	colnames(newDat$X1)=colnames(Dat)#
-	colnames(newDat$X2)=colnames(Dat)#
-	newDat#
+	list(points=Points,pairs=pairs)#
 }
-Dat=read.table("abalone.data",sep=",")
-samplepairs(10,Dat,Dat[,2])
+convertDat(newDat)
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		temp=Points[i,]#
+		row.match=apply(TDat,1,identical,temp)#
+		ind.match=which(row.match)#
+		pairs[ind.match]=i#
+	}#
+	list(points=Points,pairs=pairs)#
+}
+convertDat(newDat)
+Cdat=convertDat(newDat)
+P=Cdat$points
+P[1]
+P[1,]
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		temp=Points[i,]#
+		row.match=apply(TDat,1,identical,temp)#
+		ind.match=which(rownames(TDat)==rownames(temp))#
+		pairs[ind.match]=i#
+	}#
+	list(points=Points,pairs=pairs)#
+}
+convertDat(newDat)
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		temp=Points[i,]#
+		row.match=apply(TDat,1,identical,temp)#
+		ind.match=which(row.match)#
+		print(ind.match)#
+		pairs[ind.match]=i#
+	}#
+	list(points=Points,pairs=pairs)#
+}
+convertDat(newDat)
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		temp=Points[i,]#
+		row.match=apply(TDat,1,identical,temp)#
+		ind.match=which(row.match)#
+		print(row.match)#
+		pairs[ind.match]=i#
+	}#
+	list(points=Points,pairs=pairs)#
+}
+convertDat(newDat)
+TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)
+Points
+TDat[1,]
+identical(TDat[1,],Points[1,])
+convertDat<-function(newDat){#
+	TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
+	for (i in 1:n){#
+		row.match=apply(TDat,1,identical,Points[i,])#
+		ind.match=which(row.match)#
+		pairs[ind.match]=i#
+	}#
+	list(points=Points,pairs=pairs)#
+}
+convertDat(newDat)
+i=1
+row.match=apply(TDat,1,identical,Points[i,])
+row.match
+identical(TDat[1,],Points[i,])
+row.match=apply(TDat,2,identical,Points[i,])
+row.match
+row.match=apply(TDat,1,identical,Points[i,])
+row.match=lapply(TDat,1,identical,Points[i,])
+row.match=apply(TDat,1,identical,Points[i,])
+row.match
+temp=Points[1,]
+temp
+apply(TDat,1,identical,temp)
+apply(as.matrix(TDat),1,identical,temp)
+typeof(Tdat)
+typeof(TDat)
+typeof(TDat[1,])
+typeof(as.matrix(TDat[1,]))
+m=as.matrix(TDat)
+m
+apply(m,1,identical,temp)
+m-temp
+m
+temp
+identical(m[1,],temp)
+m[1,]
+temp
+typeof(temp)
+identical(m[1,],as.matrix(temp))
+as.matrix(temp)
+identical(TDat[1,],temp)
+apply(m,1,identical,as.double(temp))
+m
+identical(m[1,],as.double(temp))
+m
+m[1,]
+identical(m[1,],as.matrix(temp))
+matrix(temp,nrow=1)
+as.matrix(temp)
+identical(m[1,],matrix(temp,nrow=1))
+identical(matrix(m[1,],nrow=1),matrix(temp,nrow=1))
+m[1,]
+matrix(m[1,],nrow=1)
+temp0=matrix(m[1,],nrow=1)
+temp1=matrix(temp,nrow=1)
+temp0
+temp1
+identical(temp0,temp1)
+identical(temp0,temp1,ignore.environment=T)
+identical(temp0,temp1,attrib.as.set=F)
+temp1[9]
+temp2[9]
+temp0[9]
+temp1
+temp1[[1]]
+temp1[[2]]
+typeof(temp1)
+typeof(temp2)
+typeof(temp0)
+as.array(temp1)
+temp2=as.array(temp1)
+temp2[[1]]
+rm(list=ls())
+clear
 Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone",sep=":")$V1
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)
+TDat=rbind(newDat$X1,newDat$X2)#
+	Points=unique(TDat)#
+	n=nrow(Points)#
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)
+i=1
+row.match=apply(TDat,1,identical,Points[i,])
+row.match
+identical(TDat[1,],Points[i,])
+TDat=as.matrix(TDat)#
+	Points=as.matirx(Points)
+Points=as.matrix(Points)
+typeof(TDat)
+identical(TDat[1,],Points[i,])
+row.match=apply(TDat,1,identical,Points[i,])
+row.match
+ind.match=which(row.match)#
+		pairs[ind.match]=i
+pairs
+for (i in 1:n){#
+		row.match=apply(TDat,1,identical,Points[i,])#
+		ind.match=which(row.match)#
+		pairs[ind.match]=i#
+	}
+pairs
+rm(list=ls())
 Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1
-samplepairs(10,Dat,Dat[,2])
-Test=samplepairs(10,Dat,Dat[,2])
-x1=Test$X1[1,]
-x2=Test$X2[1,]
-sum((x1-x2)^2)
-kernel1<-function(x1,x2,kappa){#
-	k=sum((x1-x2)^2)#
-	K=exp(-kappa*k/2)#
-	K#
-}
-levels(x1)
-levels(Test$X1[,4])
-levels(Test$X1[,9])
-nlevels(x1)
-x1
-nlevels(Test$X1[,4])
-nlevels(Test$X1[,9])
-unique(Test$X1[,4])
-unique(Test$X1[,9])
-x0=matrix(NA,0,0)
-x0=cbind(x0,1)
-newx=as.data.frame(matrix(NA,nrwo(x),0))
-unique(Test$X1[,9])
-length(unique(Test$X1[,9]))
-Test$X1[,9]^2
-Test$X1[,9]^3
-Test$X1[,9]^1:3
-sapply(Test$X1[,9],^1:3)
-2^1:3
-2^(1:3)
-Test$X1[,9]^(1:3)
-library(splines)
-x1
-bs(x1)
-bs(Test$X1[,5])
-bs(Test$X1[,5],knots)
-bs(Test$X1[,5])
-bs(Test$X1[,5])[[1]]
-bs(Test$X1[,5])$
-bs(Test$X1[,5])*2
-bs
-range(x)
-range(x1)
-x1
-k=2
-tempx=Temp$X1[,2]
-Test$X1
-Test$X1[,2]
-tempx=Test$X1[,2]
-xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
-xi
-k
-tempx
-tempx-xi
-outer(tempx,xi,-)
-outer(tempx,xi,'-')
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx)<=2){#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-}
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx)<=2)){#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx)<=2)){#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-Test$X1
-j=2
-tempx=x[,j]
-tempx=Test$X1[,j]
-tempx
-length(unique(tempx)
-)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:3+k]=max(outer(tempx,xi,'-'),0)^3#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-outer('1',1:3,paste())
-outer('1',1:3,'paste()'')
-outer('1',1:3,'paste()')
-?sprintf
-sprintf("%i",1:3)
-sprintf("a","%i",1:3)
-sprintf("a%i",1:3)
-a='x'
-sprintf(a"%i",1:3)
-sprintf(a,"%i",1:3)
-sprintf("&s%i",a,1:3)
-sprintf("%s %i",a,1:3)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			colnames(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			colnames(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-			print(tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			names(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			print(colnames(addx))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x[,j]),1:(k+3))#
-			print(colnames(x[,j]))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			print(colnames(x)[j]#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x[,j])#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			print(colnames(x)[j])#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x)[j]#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,1)
-cubicspl(Test$X1,2)
-x
-x=Test$X1[,j]
-x
-tempx=x
-xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
-k
-addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3
-x=Test$X1
-addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			addx[,4:(3+k)]=max(outer(tempx,xi,'-'),0)^3
-addx
-xi
-outer(tempx,xi,'-')
-max(0,outer(tempx,xi,'-'))
-outer(0,outer(tempx,xi,'-'),'max()')
-outer(0,outer(tempx,xi,'-'),'max')
-o=outer(tempx,xi,'-')
-o
-sapply(o,max)
-max(1,2)
-o>0
-o*(o>0)
-cubicspl<-function(x,k){#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x)[j]#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			h=outer(tempx,xi,'-')#
-			addx[,4:(3+k)]=(h*(h>0))^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	newx#
-}
-cubicspl(Test$X1,2)
+colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
+source("./functions.r")#
+y=Dat[,9]#
+Dat=Dat[,1:8]#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)
+convertDat(newDat)
+source("./functions.r")
+convertDat(newDat)
+pair
+p=convertDat(newDat)$pair
+p
+length(p)
+apply(p[,1],1,'<',p[,2])
+p
+p[,1]>p[,2]
+sum(p[,1]<p[,2])
+?mvrnorm
+mvdnorm
+rmvnorm
+install('nvtnorm')
+library('nvtnorm')
+install(nvtnorm)
+install.packages("nvtnorm")
+library(nvtnorm)

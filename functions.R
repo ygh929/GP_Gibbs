@@ -1,6 +1,6 @@
 #sample pairs from the data
 
-library(MASS)#to generate mvrnorm
+library(mvtnorm)#to generate rmvnorm
 
 samplepairs<-function(m,Dat,y){
 	#get sample of pairs from the data
@@ -55,6 +55,89 @@ getSigma<-function(x,ker){
 	Sigma
 }
 
+MoveonSph=function(pos,sig,r){
+	p=length(pos)
+	newpos=pos+rnorm(p,0,sig)
+	newpos=newpos/sqrt(sum(newpos^2))*r
+	newpos
+}
+
+convertDat<-function(newDat){
+	TDat=rbind(newDat$X1,newDat$X2)
+	Points=unique(TDat)
+	TDat=as.matrix(TDat)
+	Points=as.matrix(Points)
+	n=nrow(Points)
+	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)
+	for (i in 1:n){
+		
+		row.match=apply(TDat,1,identical,Points[i,])
+		ind.match=which(row.match)
+		pairs[ind.match]=i
+	}
+	list(points=Points,pairs=pairs)
+}
+
+loss_GP=function(fI,pairs){
+	Y=pairs
+	for (i in 1:length(Y)){
+		Y[i]=fI[pairs[i]]
+	}
+	loss=sum(Y[,1]<Y[,2])
+	loss
+}
+	
+SA_GP<-function(cDat){
+	#try to minimize q=l-log(p)
+	kmax=1e4
+	kappa=10
+	sig=0.5 #initial jump sd
+	tol=1e5 #initial tol
+	x=cDat$points
+	pairs=cDat$pairs
+	Sig=getSigma(x,kernel1)
+	n=nrow(x)
+	r=sqrt(n)
+	#initialize
+	fI=rmvnorm(1,rep(0,n),Sig)
+	fI=fI/sqrt(sum(fI^2))*r
+	q=kappa*loss_GP(fI,pairs)#-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
+	print(q)
+	#move
+	for (k in 1:kmax){
+		count=0
+		newfI=rmvnorm(1,rep(0,n),Sig)
+		newFi=newfI/sqrt(sum(newfI^2))*r
+		newq=kappa*loss_GP(newfI,pairs)#-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
+		print(newq)
+		if ((newq-tol)<q){
+			temp=runif(1,0,1)
+			if (temp<(exp(q-newq))){
+				fI=newfI
+				q=newq
+				count=count+1
+			}
+		}
+		if (k%%100==0){
+			#adjust tol and sig by accept rate
+			accrate=count/100
+			if (accrate>0.5){
+				tol=tol/2
+			}
+			if (accrate<0.2){
+				#sig=sig/2
+			}
+			if (accrate==0){
+				#break
+			}
+			count=0
+			print(accrate)
+		}
+	}
+	list(fI=fI,Sig=Sig,L=loss_GP(fI,pairs))
+}
+
+
 getcov<-function(xt,x,ker){
 	#x is all the observed n (we use 2m here) locations and xt is the new pair
 	n=nrow(x)
@@ -66,6 +149,9 @@ getcov<-function(xt,x,ker){
 	}
 	Sigma
 }
+
+
+
 
 pre_GP<-function(coSig,Sig,f){
 	
@@ -84,7 +170,17 @@ normto1<-function(x){
 	normDat$X2=Tdata[(m+1):(2*m),]-1
 	list(normDat=normDat,ran=ran)
 }
-
+normbyran<-function(x,ran){
+	Tdat=rbind(x$X1,x$X2)
+	nr=nrow(x$X1)
+	nc=ncol(Tdat)
+	for (j in 1:nc){
+		Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2-1
+	}
+	x$X1=Tdat[1:nr,]
+	x$X2=Tdat[(nr+1):(2*nr),]
+	x
+}
 cubicspl<-function(x,k){
 	#function to get cubic splines with k knots in each dimension
 	newx=as.data.frame(matrix(NA,nrow(x),0))

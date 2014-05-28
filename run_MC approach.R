@@ -5,7 +5,7 @@ y=Dat[,9]
 Dat=Dat[,1:8]
 
 
-m=10 #number of pairs in training data
+m=100 #number of pairs in training data
 tm=100 #number of pairs in testing data
 N=100# number of samples in posterior sampling
 
@@ -22,13 +22,14 @@ while (i<=N){
 	Y=mvrnorm(1,rep(0,2*m),Sig)
 	est$Y1=Y[1:m]
 	est$Y2=Y[(m+1):(2*m)]
-	S=losssum(est)
+	S=1*losssum(est)
 	temp=runif(1,0,1)
 	if (temp<(exp(-S))){
 		post$Y1=cbind(post$Y1,est$Y1)
 		post$Y2=cbind(post$Y2,est$Y2)
 		i=i+1
 	}
+	print(i)
 }
 post_GP=post
 
