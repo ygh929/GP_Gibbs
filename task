@@ -1,0 +1,7 @@
+#!/bin/bash
+#PBS -j oe
+#PBS -l mem=2048mb
+#PBS -l ncpus=4
+cd ~/test/upload-newest
+R CMD BATCH run_new.R result.log
+

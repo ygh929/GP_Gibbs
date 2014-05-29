@@ -38,7 +38,7 @@ samplepairs<-function(m,Dat,y){
 	newDat
 }
 
-kernel1<-function(x1,x2,kappa=3){
+kernel1<-function(x1,x2,kappa=1){
 	#kernal function to generate Sigma
 	k=sum((x1-x2)^2)
 	K=exp(-kappa*k/2)
@@ -90,10 +90,9 @@ loss_GP=function(fI,pairs){
 	loss
 }
 	
-SA_GP<-function(cDat){
+SA_GP<-function(cDat,phi=0.5){
 	#try to minimize q=l-log(p)
 	kmax=1e5
-	kappa=1
 	sig=0.5 #initial jump sd
 	tolc=1 #initial tol
 	x=cDat$points
@@ -104,13 +103,13 @@ SA_GP<-function(cDat){
 	#initialize
 	fI=rmvnorm(1,rep(0,n),Sig)
 	fI=fI/sqrt(sum(fI^2))*r
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
+	q=phi*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
 	count=0
 	#move
 	for (k in 1:kmax){
 
 		newfI=MoveonSph(fI,sig,r)
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
+		newq=phi*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
 	
 		temp=runif(1,0,1)
 		if (temp<(exp(tolc*(q-newq)))){
@@ -130,7 +129,6 @@ SA_GP<-function(cDat){
 			if (accrate==0){
 				break
 			}
-			print(accrate)
 			count=0
 		}
 	}
