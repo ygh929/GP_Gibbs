@@ -1,0 +1,7 @@
+#!/bin/bash
+#PBS -j oe
+#PBS -l mem=2048mb
+#PBS -l ncpus=4
+cd ~/GP_GIbbs/
+R CMD BATCH run_GP.R result_GP.log
+

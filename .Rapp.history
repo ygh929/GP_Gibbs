@@ -1,1732 +1,795 @@
-print(a,b)
-Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,9]#
-Dat=Dat[,1:8]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
+max(y1)
+y1-max(y1)
+y1=y1-max(y1)
+y1
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-m=500 #number of pairs in training data
-Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,9]#
-Dat=Dat[,1:8]#
-m=500 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,9]#
-Dat=Dat[,1:8]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-fI
-Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,9]#
-Dat=Dat[,1:8]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-print(q)
-Dat=read.table("abalone.data",sep=",")#
-colnames(Dat)=read.table("abalone.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,9]#
-Dat=Dat[,1:8]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,paris)
-loss_GP(fI,pairs)
-pairs
-loss_GP(fI,d)
-loss_GP(fI,pair)
-loss_GP(fI,cDat$pair)
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-rm(list=ls())
-Dat=read.table("housing.data",sep=",")#
-colnames(Dat)=read.table("housing.domain",sep=":")$V1#
-source("./functions.r")
-dim(Dat)
-Dat=read.table("housing.data",sep=",")#
-colnames(Dat)=read.table("housing.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,14]#
-Dat=Dat[,1:13]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-samplepairs(m,Datmy)
-samplepairs(m,Datm,y)
-samplepairs(m,Dat,y)
-nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))
-fac.ind=sapply(Dat,is.factor)#
-	fDat=Dat[fac.ind]#
-	dummys=model.matrix(y~.,data=fDat)#
-	dummys=dummys[,2:ncol(dummys)]#
-	Dat=Dat[,-which(fac.ind==1)]#
-	Dat=cbind(Dat,dummys)
-fac.ind
-Dat=read.table("housing.data",sep=",")#
-colnames(Dat)=read.table("housing.domain",sep=":")$V1#
-source("./functions.r")#
-y=Dat[,14]#
-Dat=Dat[,1:13]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-cDat
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-kmax=1e4#
-	kappa=10#
-	sig=0.5 #initial jump sd#
-	tol=1e5 #initial tol#
-	x=cDat$points#
-	pairs=cDat$pairs#
-	Sig=getSigma(x,kernel1)#
-	n=nrow(x)#
-	r=sqrt(n)#
-	#initialize
-fI=rmvnorm(1,rep(0,n),Sig)#
-	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)#-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
-q
-count=0#
-		newfI=rmvnorm(1,rep(0,n),Sig)#
-		newFi=newfI/sqrt(sum(newfI^2))*r#
-		newq=kappa*loss_GP(newfI,pairs)#-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
-newq
-if ((newq-tol)<q){#
-			temp=runif(1,0,1)#
-			if (temp<(exp(q-newq))){#
-				fI=newfI#
-				q=newq#
-				count=count+1#
-			}#
-		}
-count
-for (k in 1:kmax){#
-		count=0#
-		newfI=rmvnorm(1,rep(0,n),Sig)#
-		newFi=newfI/sqrt(sum(newfI^2))*r#
-		newq=kappa*loss_GP(newfI,pairs)#-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-		if ((newq-tol)<q){#
-			temp=runif(1,0,1)#
-			if (temp<(exp(q-newq))){#
-				fI=newfI#
-				q=newq#
-				count=count+1#
-			}#
-		}#
-		if (k%%100==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/100#
-			if (accrate>0.5){#
-				tol=tol/2#
-			}#
-			if (accrate<0.2){#
-				#sig=sig/2#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-			print(accrate)#
-		}#
-	}
-q
-newq
-rm(list=ls())
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=10 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)
-q
-loss_GP(fI,cDat$pairs)
-fI=result$fI#
-Sig=result$Sig
-loss_GP(fI,cDat$pairs)
-fI
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-normbyran<-function(x,ran){#
-	Tdat=rbind(x$X1,x$X2)#
-	nr=nrow(x$X1)#
-	nc=ncol(Tdat)#
-	for (j in 1:ncol(Tdat)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdat[,j]=Tdat[,j]-ran[1,j]#
-		}#
-	}#
-	x$X1=Tdat[1:nr,]#
-	x$X2=Tdat[(nr+1):(2*nr),]#
-	x#
+	return(trian)#
 }
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=20 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
+trian=get_dens(Dat,metric)
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=T, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Dat=c(10,4,6)
+trian=get_dens(Dat,metric)#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+device.new()
+dev.new()
+trian=get_dens(Dat,metric)#
 #
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$points)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=20 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-#sample pairs from the data#
-#
-library(mvtnorm)#to generate rmvnorm#
-#
-samplepairs<-function(m,Dat,y){#
-	#get sample of pairs from the data#
-	#values in X1 is preefered to values in X2#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
-#
-	fac.ind=sapply(Dat,is.factor)#
-	if (sum(fac.ind)>0){#
-		fDat=Dat[fac.ind]#
-		dummys=model.matrix(y~.,data=fDat)#
-		dummys=dummys[,2:ncol(dummys)]#
-		Dat=Dat[,-which(fac.ind==1)]#
-		Dat=cbind(Dat,dummys)#
-	}#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i1,])#
-			newDat$X2=rbind(newDat$X2,Dat[i2,])#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i2,])#
-			newDat$X2=rbind(newDat$X2,Dat[i1,])#
-			i=i+1			#
-		}#
-	}#
-	colnames(newDat$X1)=colnames(Dat)#
-	colnames(newDat$X2)=colnames(Dat)#
-	newDat#
-}#
-#
-kernel1<-function(x1,x2,kappa=1){#
-	#kernal function to generate Sigma#
-	k=sum((x1-x2)^2)#
-	K=exp(-kappa*k/2)#
-	K#
-}#
-#
-getSigma<-function(x,ker){#
-	#Get the covariance function given x values and kernel#
-	n=nrow(x)#
-	Sigma=matrix(1,n,n)#
-	for (i in 2:n){#
-		for (j in 1:(i-1)){#
-			Sigma[i,j]=ker(x[i,],x[j,])#
-			Sigma[j,i]=Sigma[i,j]#
-		}#
-	}	#
-	Sigma#
-}#
-#
-MoveonSph=function(pos,sig,r){#
-	p=length(pos)#
-	newpos=pos+rnorm(p,0,sig)#
-	newpos=newpos/sqrt(sum(newpos^2))*r#
-	newpos#
-}#
-#
-convertDat<-function(newDat){#
-	TDat=rbind(newDat$X1,newDat$X2)#
-	Points=unique(TDat)#
-	TDat=as.matrix(TDat)#
-	Points=as.matrix(Points)#
-	n=nrow(Points)#
-	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
-	for (i in 1:n){#
-		row.match=apply(TDat,1,identical,Points[i,])#
-		ind.match=which(row.match)#
-		pairs[ind.match]=i#
-	}#
-	list(points=Points,pairs=pairs)#
-}#
-#
-loss_GP=function(fI,pairs){#
-	Y=pairs#
-	for (i in 1:length(Y)){#
-		Y[i]=fI[pairs[i]]#
-	}#
-	loss=sum(Y[,1]<Y[,2])#
-	loss#
-}#
-SA_GP<-function(cDat){#
-	#try to minimize q=l-log(p)#
-	kmax=1e4#
-	kappa=10#
-	sig=0.5 #initial jump sd#
-	tol=1e5 #initial tol#
-	x=cDat$points#
-	pairs=cDat$pairs#
-	Sig=getSigma(x,kernel1)#
-	n=nrow(x)#
-	r=sqrt(n)#
-	#initialize#
-	fI=rmvnorm(1,rep(0,n),Sig)#
-	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-	#move#
-	for (k in 1:kmax){#
-		count=0#
-		newfI=MoveonSph(fI,sig,r)#
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-		if ((newq-tol)<q){#
-			temp=runif(1,0,1)#
-			if (temp<(exp(q-newq))){#
-				fI=newfI#
-				q=newq#
-				count=count+1#
-			}#
-		}#
-		if (k%%100==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/100#
-			if (accrate>0.5){#
-				tol=tol/2#
-			}#
-			if (accrate<0.2){#
-				#sig=sig/2#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(fI=fI,Sig=Sig,L=loss_GP(fI,pairs))#
-}#
-getcov<-function(xt,x,ker){#
-	#x is all the observed n (we use 2m here) locations and xt is the new pair#
-	n=nrow(x)#
-	Sigma=matrix(1,n,2)#
-	for (i in 1:n){#
-		for (j in 1:2){#
-			Sigma[i,j]=ker(x[i,],xt[j,])#
-		}#
-	}#
-	Sigma#
-}#
-pre_GP<-function(coSig,Sig,f){#
-	Y=t(coSig)%*%Sig%*%matrix(f,ncol=1)#
-	Y#
-}#
-normto1<-function(x){#
-	normDat=list(X1=NULL,X2=NULL)#
-	Tdata=rbind(x$X1,x$X2)#
-	ran=sapply(Tdata,range)#
-	for (j in 1:ncol(Tdata)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdata[,j]=(Tdata[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdata[,j]=Tdata[,j]-ran[1,j]#
-		}#
-	}#
-	m=nrow(x[[1]])#
-	normDat$X1=Tdata[1:m,]-1#
-	normDat$X2=Tdata[(m+1):(2*m),]-1#
-	list(normDat=normDat,ran=ran)#
-}#
-normbyran<-function(x,ran){#
-	Tdat=rbind(x$X1,x$X2)#
-	nr=nrow(x$X1)#
-	nc=ncol(Tdat)#
-	for (j in 1:ncol(Tdat)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdat[,j]=Tdat[,j]-ran[1,j]#
-		}#
-	}#
-	x$X1=Tdat[1:nr,]#
-	x$X2=Tdat[(nr+1):(2*nr),]#
-	x#
-}#
-cubicspl<-function(x,k){#
-	#function to get cubic splines with k knots in each dimension#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x)[j]#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			h=outer(tempx,xi,'-')#
-			addx[,4:(3+k)]=(h*(h>0))^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	rownames(newx)=rownames(x)#
-	newx#
-}#
-#
-losssum<-function(est){#
-	#est has two elements in the list $Y1 and $Y2#
-	S=sum(est$Y2>est$Y1)#
-	S#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Dat
+metric=function(x,y){#
+	return(abs(x-y)^2)#
 }
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=20 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-m=50 #number of pairs in training data
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-#sample pairs from the data#
-#
-library(mvtnorm)#to generate rmvnorm#
-#
-samplepairs<-function(m,Dat,y){#
-	#get sample of pairs from the data#
-	#values in X1 is preefered to values in X2#
-	nr=dim(Dat)[1]#
-	nc=dim(Dat)[2]#
-	newDat=list(X1=as.data.frame(NULL),X2=as.data.frame(NULL))#
-#
-	fac.ind=sapply(Dat,is.factor)#
-	if (sum(fac.ind)>0){#
-		fDat=Dat[fac.ind]#
-		dummys=model.matrix(y~.,data=fDat)#
-		dummys=dummys[,2:ncol(dummys)]#
-		Dat=Dat[,-which(fac.ind==1)]#
-		Dat=cbind(Dat,dummys)#
-	}#
-	i=1#
-	while (i<=m){#
-		i1=sample(1:nr,1)#
-		i2=sample(1:nr,1)#
-		if (y[i1]>y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i1,])#
-			newDat$X2=rbind(newDat$X2,Dat[i2,])#
-			i=i+1#
-		}#
-		if (y[i1]<y[i2]){#
-			newDat$X1=rbind(newDat$X1,Dat[i2,])#
-			newDat$X2=rbind(newDat$X2,Dat[i1,])#
-			i=i+1			#
-		}#
-	}#
-	colnames(newDat$X1)=colnames(Dat)#
-	colnames(newDat$X2)=colnames(Dat)#
-	newDat#
+metric=function(x,y){#
+	return(abs(x-y)^2)#
 }#
 #
-kernel1<-function(x1,x2,kappa=5){#
-	#kernal function to generate Sigma#
-	k=sum((x1-x2)^2)#
-	K=exp(-kappa*k/2)#
-	K#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
 }#
 #
-getSigma<-function(x,ker){#
-	#Get the covariance function given x values and kernel#
-	n=nrow(x)#
-	Sigma=matrix(1,n,n)#
-	for (i in 2:n){#
-		for (j in 1:(i-1)){#
-			Sigma[i,j]=ker(x[i,],x[j,])#
-			Sigma[j,i]=Sigma[i,j]#
-		}#
-	}	#
-	Sigma#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
+#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
 }#
 #
-MoveonSph=function(pos,sig,r){#
-	p=length(pos)#
-	newpos=pos+rnorm(p,0,sig)#
-	newpos=newpos/sqrt(sum(newpos^2))*r#
-	newpos#
-}#
+trian=get_dens(Dat,metric)#
 #
-convertDat<-function(newDat){#
-	TDat=rbind(newDat$X1,newDat$X2)#
-	Points=unique(TDat)#
-	TDat=as.matrix(TDat)#
-	Points=as.matrix(Points)#
-	n=nrow(Points)#
-	pairs=matrix(NA,nrow=nrow(newDat$X1),ncol=2)#
-	for (i in 1:n){#
-		row.match=apply(TDat,1,identical,Points[i,])#
-		ind.match=which(row.match)#
-		pairs[ind.match]=i#
-	}#
-	list(points=Points,pairs=pairs)#
-}#
-#
-loss_GP=function(fI,pairs){#
-	Y=pairs#
-	for (i in 1:length(Y)){#
-		Y[i]=fI[pairs[i]]#
-	}#
-	loss=sum(Y[,1]<Y[,2])#
-	loss#
-}#
-SA_GP<-function(cDat){#
-	#try to minimize q=l-log(p)#
-	kmax=1e4#
-	kappa=10#
-	sig=0.5 #initial jump sd#
-	tol=1e5 #initial tol#
-	x=cDat$points#
-	pairs=cDat$pairs#
-	Sig=getSigma(x,kernel1)#
-	n=nrow(x)#
-	r=sqrt(n)#
-	#initialize#
-	fI=rmvnorm(1,rep(0,n),Sig)#
-	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-	#move#
-	for (k in 1:kmax){#
-		count=0#
-		newfI=MoveonSph(fI,sig,r)#
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-		if ((newq-tol)<q){#
-			temp=runif(1,0,1)#
-			if (temp<(exp(q-newq))){#
-				fI=newfI#
-				q=newq#
-				count=count+1#
-			}#
-		}#
-		if (k%%100==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/100#
-			if (accrate>0.5){#
-				tol=tol/2#
-			}#
-			if (accrate<0.2){#
-				#sig=sig/2#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(fI=fI,Sig=Sig,L=loss_GP(fI,pairs))#
-}#
-getcov<-function(xt,x,ker){#
-	#x is all the observed n (we use 2m here) locations and xt is the new pair#
-	n=nrow(x)#
-	Sigma=matrix(1,n,2)#
-	for (i in 1:n){#
-		for (j in 1:2){#
-			Sigma[i,j]=ker(x[i,],xt[j,])#
-		}#
-	}#
-	Sigma#
-}#
-pre_GP<-function(coSig,Sig,f){#
-	Y=t(coSig)%*%Sig%*%matrix(f,ncol=1)#
-	Y#
-}#
-normto1<-function(x){#
-	normDat=list(X1=NULL,X2=NULL)#
-	Tdata=rbind(x$X1,x$X2)#
-	ran=sapply(Tdata,range)#
-	for (j in 1:ncol(Tdata)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdata[,j]=(Tdata[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdata[,j]=Tdata[,j]-ran[1,j]#
-		}#
-	}#
-	m=nrow(x[[1]])#
-	normDat$X1=Tdata[1:m,]-1#
-	normDat$X2=Tdata[(m+1):(2*m),]-1#
-	list(normDat=normDat,ran=ran)#
-}#
-normbyran<-function(x,ran){#
-	Tdat=rbind(x$X1,x$X2)#
-	nr=nrow(x$X1)#
-	nc=ncol(Tdat)#
-	for (j in 1:ncol(Tdat)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdat[,j]=Tdat[,j]-ran[1,j]#
-		}#
-	}#
-	x$X1=Tdat[1:nr,]#
-	x$X2=Tdat[(nr+1):(2*nr),]#
-	x#
-}#
-cubicspl<-function(x,k){#
-	#function to get cubic splines with k knots in each dimension#
-	newx=as.data.frame(matrix(NA,nrow(x),0))#
-	for (j in 1:ncol(x)){#
-		tempx=x[,j]#
-		if (length(unique(tempx))<=2){#
-			names(tempx)=colnames(x)[j]#
-			newx=cbind(newx,tempx)#
-		}else{#
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
-			addx=matrix(NA,nrow(x),k+3)#
-			addx[,1:3]=outer(tempx,1:3,'^')#
-			h=outer(tempx,xi,'-')#
-			addx[,4:(3+k)]=(h*(h>0))^3#
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))#
-			newx=cbind(newx,addx)	#
-		}#
-	}#
-	rownames(newx)=rownames(x)#
-	newx#
-}#
-#
-losssum<-function(est){#
-	#est has two elements in the list $Y1 and $Y2#
-	S=sum(est$Y2>est$Y1)#
-	S#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))
+grade.trellis()
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+I(1!=2)
+I(1!=2)*1
+metric=function(x,y){#
+	return(1*I(x!=y))#
 }
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
+trian=get_dens(Dat,metric)
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+?levelplot
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)),default.theme=standard.theme(color=F))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=tray(0:100/100)#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/20),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         col=graey(sqe(100,200,20)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=graey(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         #par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+y1
+min(trian$y1)
+min(trian$y2)
+min(trian$y3)
+require(mixexp)#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
+l1=function(Dat,p){#
+	#likelihood function#
+	l=matrix(Dat,1,3)%*%as.matrix(log(p),1,3)#
+	return(l)#
 }#
-mean(err)
-kmax=1e4#
-	kappa=10#
-	sig=0.5 #initial jump sd#
-	tol=1e5 #initial tol#
-	x=cDat$points#
-	pairs=cDat$pairs#
-	Sig=getSigma(x,kernel1)#
-	n=nrow(x)#
-	r=sqrt(n)#
-	#initialize#
-	fI=rmvnorm(1,rep(0,n),Sig)#
-	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
-q
-fI
-sum(fI^2)
-count=0#
-		newfI=MoveonSph(fI,sig,r)#
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
-newq
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
+l2=function(Dat,metric,p){#
+	#expectation of loss function#
+	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
+	return(l)#
 }#
-mean(err)
-loss(fI,cDat$pairs)
-loss_GP(fI,cDat$pairs)
-m
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
+l3=function(Dat,metric,p){#
+	#original loss function#
+	rhat=which.max(p)#
+	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
+	return(l)#
 }#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
+metric=function(x,y){#
+	return((x-y)^2)#
 }#
-mean(err)
-#try to minimize q=l-log(p)#
-	kmax=1e4#
-	kappa=10#
-	sig=0.5 #initial jump sd#
-	tolc=1e-10 #initial tol#
-	x=cDat$points#
-	pairs=cDat$pairs#
-	Sig=getSigma(x,kernel1)#
-	n=nrow(x)#
-	r=sqrt(n)#
-	#initialize#
-	fI=rmvnorm(1,rep(0,n),Sig)#
-	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
-q
-count=0#
-		newfI=MoveonSph(fI,sig,r)#
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
-newq
-temp=runif(1,0,1)
-exp(tolc*(q-newq))
-temp
-if (temp<(exp(tolc*(q-newq)))){#
-			fI=newfI#
-			q=newq#
-			count=count+1#
-		}
-count
-k%%100==0
-k=1
-k%%100==0
-rm(list=ls())
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=50 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
 }#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
 #
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
 #
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-fI
-loss_GP(fI,cDat$pairs)
-fI
-cDat$pairs
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-result$q
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-result$q
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-result$q
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-result$q
-m
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-result$q
-loss_GP(fI,cDat$pairs)
-tDat=newDat
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-x[1,]
-xt[1,]
-tDat
-tDat[1,]
-xt[1,]
-rm(list=ls())
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig
-tDat=newDat
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-xt[1,]
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)
-cDat$points[1,]
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)
-cDat$points[1,]
-tDat=newDat
-ntDat=normbyran(tDat,ranDat)
-ntDat$X1[1,]
-normbyran<-function(x,ran){#
-	Tdat=rbind(x$X1,x$X2)#
-	nr=nrow(x$X1)#
-	nc=ncol(Tdat)#
-	for (j in 1:ncol(Tdat)){#
-		if (ran[1,j]!=ran[2,j]){#
-			Tdat[,j]=(Tdat[,j]-ran[1,j])/(ran[2,j]-ran[1,j])*2#
-		}else{#
-			Tdat[,j]=Tdat[,j]-ran[1,j]#
-		}#
-	}#
-	x$X1=Tdat[1:nr,]-1#
-	x$X2=Tdat[(nr+1):(2*nr),]-1#
-	x#
+	return(trian)#
 }
-ntDat$X1[1,]
-ntDat=normbyran(tDat,ranDat)
-ntDat$X1[1,]
+trian=get_dens(Dat,metric)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.,label="p3",pos=1)#
+trellis.unfocus()
+trian=get_dens(Dat,metric)#
+#
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+vc=6#
+eps=0.01#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+e^(n*eps^2)/256
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+exp((n*eps^2)/256)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^vc#
+exp((n*eps^2)/256)
+x=runif(1e4,3,7)
+mean(x^2)
+mean(x^2)*3
+mean(x)^2+var(x)
 Dat=read.table("pyrim.data",sep=",")#
 colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
 source("./functions.r")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
+#
 m=100 #number of pairs in training data#
 tm=100 #number of pairs in testing data#
 N=100# number of samples in posterior sampling#
 #
 newDat=samplepairs(m,Dat,y)#
 tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$normDat#
+ntDat=normbyran(tDat,ranDat)#
+sDat=Dat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+b=SA_s(sDat,1)#
+loss_s(b,stDat)
+setwd("/Desktop")
+setwd("~/Desktop/ranking/code/GP_Gibbs/")
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
 #
-#first norm to [-1,1]#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$normDat#
+ntDat=normbyran(tDat,ranDat)#
+sDat=Dat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+b=SA_s(sDat,1)#
+loss_s(b,stDat)
+ran[1,]
+ranDat
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ranDat#
+ntDat=normbyran(tDat,ranDat)#
+sDat=Dat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+b=SA_s(sDat,1)#
+loss_s(b,stDat)
+ranDat
+nDat
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
 nDat=normto1(newDat)#
 norDat=nDat$normDat#
 ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
 ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-result=SA_GP(cDat)
-loss_GP(fI,cDat$pairs)
-SA_GP<-function(cDat){#
-	#try to minimize q=l-log(p)#
-	kmax=1e5#
-	kappa=1#
+sDat=Dat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+b=SA_s(sDat,1)#
+loss_s(b,stDat)
+kmax=1e5#
 	sig=0.5 #initial jump sd#
 	tolc=1 #initial tol#
 	x=cDat$points#
@@ -1737,641 +800,1049 @@ SA_GP<-function(cDat){#
 	#initialize#
 	fI=rmvnorm(1,rep(0,n),Sig)#
 	fI=fI/sqrt(sum(fI^2))*r#
-	q=kappa*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
+	q=phi*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)#
+	count=0
+#try to minimize q=l-log(p)#
+	kmax=1e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps)#
+	Sig=diag(ps)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps),Sig)#
+	b=b/sqrt(sum(b^2))*r#
+	q=phi*loss_s(b,sDat)-dmvnorm(b,mean=rep(0,ps),sigma=Sig,log=TRUE)#
+	count=0
+ps
+sDat
+sDat[[1]]
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
 #
-		newfI=MoveonSph(fI,sig,r)#
-		newq=kappa*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			fI=newfI#
-			q=newq#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.75#
-			}#
-			if (accrate==0){#
-				break#
-			}#
-			print(accrate)#
-			count=0#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+sDat=norDat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+b=SA_s(sDat,1)#
+loss_s(b,stDat)
+loss_s(b,ntDat)
+dim(ntDat[[1]])
+dim(b)
+length(b)
+dim(sDat)
+dim(sDat[[1]])
+b=result$b
+b=b$b
+b
+loss_s(b,ntDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+sDat=norDat#
+#sDat=cubicspl(norDat,1)#
+stDat=cubicspl(ntDat,1)#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+spl<-function(Dat,c,k){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+3))#
+			newx=cbind(newx,addx)	#
 		}#
 	}#
-	list(fI=fI,Sig=Sig,q=q)#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	sDat#
 }
-loss_GP(fI,cDat$pairs)
-result=SA_GP(cDat)
-loss_GP(fI,cDat$pairs)
-fI=result$fI
-loss_GP(fI,cDat$pairs)
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-tDat=newDat
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-coSig
-max(coSig)
-fI[1]
-xt=rbind(ntDat$X1,ntDat$X2)
-xt=rbind(ntDat$X1[1,],ntDat$X2[1,])
-coSig=getcov(xt,x,kernel1)
-max(coSig)
-coSig[1:2,]
-Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])
-Y
-fI[1]
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-tDat=newDat
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-rm(list=ls())
-plot(c(0,1,1),c(1,0,1),type='l')
-plot(c(0,1,1,0),c(1,0,1,1),type='l',xlab='x',ylab='y')
-png('rplot0528.png')
-plot(c(0,1,1,0),c(1,0,1,1),type='l',xlab='x',ylab='y')
-dev.off()
-n=1e4
-i=1
-while (i<=n){
-temp=runif(2)
-if (temp[2]>(1-temp[1]){}
-while (i<=n){
-temp=runif(2)
-n=1e4#
-sam=matrix(NA,n,2)#
-i=1#
-while(i<=n){#
-	temp=runif(2)#
-	if (temp[2]>(1-temp[1])){#
-		sam[i,]=temp#
-		i=i+1#
+spl(nDat,3,1)
+x=rbind(Dat$X1,Dat$X2)
+x
+x=rbind(nDat$X1,nDat$X2)
+x
+nDat
+spl(norDat,3,1)
+Dat=norDat
+spl<-function(Dat,c,k){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
 	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	sDat#
 }
-mean(temp[,1]+temp[,2])
-mean(sam[,1]+sam[,2])
-5/3
-plot(x,y)
-plot(temp[1],temp[2])
-plot(sam[1],sam[2])
-plot(sam[,1],sam[,2])
-var(sam[,1]+sam[,2])
-1/27
-1/18
+Dat=norDat
+spl(norDat,3,1)
+stDat=spl(ntDat,3,1)
 Dat=read.table("pyrim.data",sep=",")#
 colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
 source("./functions.r")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
+#
 m=100 #number of pairs in training data#
 tm=100 #number of pairs in testing data#
 N=100# number of samples in posterior sampling#
 #
 newDat=samplepairs(m,Dat,y)#
 tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
+#sieve approach#
 nDat=normto1(newDat)#
 norDat=nDat$normDat#
 ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
 ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-tDat=newDat
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-result$q
+sDat=spl(norDat,3,1)#
+stDat=aspl(ntDat,3,1)#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
 Dat=read.table("pyrim.data",sep=",")#
 colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
 source("./functions.r")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
+#
 m=100 #number of pairs in training data#
 tm=100 #number of pairs in testing data#
 N=100# number of samples in posterior sampling#
 #
 newDat=samplepairs(m,Dat,y)#
 tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
+#sieve approach#
 nDat=normto1(newDat)#
 norDat=nDat$normDat#
 ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
 ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-tDat=newDat
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-result$q
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-loss_GP(fI,cDat$pairs)
-tDat=newDat
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-#########################################
-tDat=newDat#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-loss_GP(fI,cDat$pairs)
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-#########################################
-tDat=newDat#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-loss_GP(fI,cDat$pairs)
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-cDat=convertDat(norDat)#
-#estimate fI#
-result=SA_GP(cDat)#
-fI=result$fI#
-Sig=result$Sig#
-#predict for test set and calculate error rate#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-#########################################
-tDat=newDat#
-err=rep(NA,tm)#
-x=cDat$points#
-#normalize test data first#
-ntDat=normbyran(tDat,ranDat)#
-for (i in 1:tm){#
-	xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-	coSig=getcov(xt,x,kernel1)#
-	Y=pre_GP(coSig,Sig,fI)#
-	err[i]=I(Y[1]<Y[2])#
-}#
-mean(err)#
-loss_GP(fI,cDat$pairs)
-f<-function(x){yx+1
-f<-function(x){
-y=x+1
-y}
-g<-function(x,fun){
-y=f(x)
-y}
-g(1,x)
-f(x)=function(x){
-y=x+2
-y}
-f=function(x){
-y=x+2
-y}
-g(1)
-g<-function(x){y=f(x)
-y}
-g(1)
-f=function(x){y=x+1
-y}
-g(1)
-?sprintf
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=100 #number of pairs in training data#
-tm=100 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat0=normbyran(tDat,ranDat)#
-#
-cDat=convertDat(norDat)
+sDat=spl(norDat,3,1)#
+stDat=spl(ntDat,3,1)#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+b
+dim(stDat[[1]])
+length(b)
+dim(sDat[[1]])
+ranDat
+nroDat
 norDat
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=10 #number of pairs in training data#
-tm=20 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat0=normbyran(tDat,ranDat)#
-#
-cDat=convertDat(norDat)#
-#estimate fI#
-Kappa=1:10#
-Phi=(1:10)*0.2#
-for (kap in Kappa){#
-	kernel1<-function(x1,x2,kappa=kap){#
-		#kernal function to generate Sigma#
-		k=sum((x1-x2)^2)#
-		K=exp(-kappa*k/2)#
-		K#
+newDat
+t=NULL
+nrow(t[[1]])
+nrow(t[[1]])+1
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+		if (!is.null(tDat)){#
+		mt=nrow(tDat$1)#
+		xt=rbind(tDat$1,tDat$2)#
+		x=rbind(x,xt)#
 	}#
-	for (phi in Phi){#
-		result=SA_GP(cDat,phi)#
-		fI=result$fI#
-		Sig=result$Sig#
-		#predict for test set and calculate error rate#
-		err=rep(NA,tm)#
-		x=cDat$points#
-		#normalize test data first#
-		ntDat=ntDat0		#
-		for (i in 1:tm){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
 		}#
-		e1=mean(err)#
-		err=rep(NA,t)#
-		ntDat=norDat#
-		for (i in 1:t){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
-		}#
-		e2=mean(err)#
-		e3=loss_GP(fI,cDat$pairs)#
-		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
-		print(msg1)#
-		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
-		print(msg2)#
 	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1)]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1)]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
 }
-kernel1<-function(x1,x2,kappa=kap){#
-		#kernal function to generate Sigma#
-		k=sum((x1-x2)^2)#
-		K=exp(-kappa*k/2)#
-		K#
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+		if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+	}#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1)]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1)]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
+}
+spl(nDat,3,1)
+spl(norDat,3,1)
+spl(norDat,3,1,ntDat)
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+		if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x)+m1,0))#
+	}#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1)]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1)]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
+}
+spl(norDat,3,1,ntDat)
+Dat=norDat
+c=3
+k=1
+tDat=ntDat
+x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+		if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x)+m1,0))#
 	}
-result=SA_GP(cDat,phi)
-fI
-fI=result$fI#
-		Sig=result$Sig
-err=rep(NA,tm)#
-		x=cDat$points#
-		#normalize test data first#
-		ntDat=ntDat0		#
-		for (i in 1:tm){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
-		}
-e1=mean(err)#
-		err=rep(NA,t)#
-		ntDat=norDat#
-		for (i in 1:t){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
-		}
-i
-ntDat=norDat
-err=rep(NA,t)
-t
-Dat=read.table("pyrim.data",sep=",")#
-colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
-source("./functions.r")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-m=10 #number of pairs in training data#
-tm=20 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
-#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#
-#first norm to [-1,1]#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat0=normbyran(tDat,ranDat)#
-#
-cDat=convertDat(norDat)#
-#estimate fI#
-Kappa=1:10#
-Phi=(1:10)*0.2#
-for (kap in Kappa){#
-	kernel1<-function(x1,x2,kappa=kap){#
-		#kernal function to generate Sigma#
-		k=sum((x1-x2)^2)#
-		K=exp(-kappa*k/2)#
-		K#
-	}#
-	for (phi in Phi){#
-		result=SA_GP(cDat,phi)#
-		fI=result$fI#
-		Sig=result$Sig#
-		#predict for test set and calculate error rate#
-		err=rep(NA,tm)#
-		x=cDat$points#
-		#normalize test data first#
-		ntDat=ntDat0		#
-		for (i in 1:tm){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
+for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
 		}#
-		e1=mean(err)#
-		err=rep(NA,m)#
-		ntDat=norDat#
-		for (i in 1:t){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
+	}
+j
+x[,1]
+tempx=x[,j]
+xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
+addx=matrix(NA,nrow(x),k+c)
+addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')
+addx[,(c+1):(c+k)]=(h*(h>0))^c
+colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))
+newx=cbind(newx,addx)
+newx=as.data.frame(matrix(NA,nrow(x),0))#
+		if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x),0))#
+	}
+for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
 		}#
-		e2=mean(err)#
-		e3=loss_GP(fI,cDat$pairs)#
-		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
-		print(msg1)#
-		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
-		print(msg2)#
+	}
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+		if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x),0))#
 	}#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1)]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1)]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
 }
-for (i in 1:t){#
-			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
-			coSig=getcov(xt,x,kernel1)#
-			Y=pre_GP(coSig,Sig,fI)#
-			err[i]=I(Y[1]<Y[2])#
-		}
-e1
+spl(norDat,3,1,ntDat)
+Dat=nroDat
+tDat=ntDat
+x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))
+m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)
+dim(x)
+newx=as.data.frame(matrix(NA,nrow(x),0))
+for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
+	}
+rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)
+stDat$X1=newx[(2*m+1):(2*m+m1)]
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x),0))#
+	}#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+			addx=matrix(NA,nrow(x),k+c)#
+			addx[,1:c]=outer(tempx,1:c,'^')#
+			h=outer(tempx,xi,'-')#
+			addx[,(c+1):(c+k)]=(h*(h>0))^c#
+			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+			newx=cbind(newx,addx)	#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1),]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1),]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
+}
+spl(norDat,3,1,ntDat)
+sDat=SDat$sDat#
+stDat=SDat$stDat
+SDat=spl(norDat,3,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+SDat=spl(norDat,3,0,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x),0))#
+	}#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			if (k>0){#
+				xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+				addx=matrix(NA,nrow(x),k+c)#
+				addx[,1:c]=outer(tempx,1:c,'^')#
+				h=outer(tempx,xi,'-')#
+				addx[,(c+1):(c+k)]=(h*(h>0))^c#
+				colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+				newx=cbind(newx,addx)	#
+			}else{#
+				addx=matrix(NA,nrow(x),k+c)#
+				addx[,1:c]=outer(tempx,1:c,'^')#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1),]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1),]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
+}
+SDat=spl(norDat,3,0,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat
+spl<-function(Dat,c,k,tDat=NULL){#
+	#function to get cubic splines with k knots in each dimension#
+	x=rbind(Dat$X1,Dat$X2)#
+	m=nrow(Dat$X1)#
+	newx=as.data.frame(matrix(NA,nrow(x),0))#
+	if (!is.null(tDat)){#
+		m1=nrow(tDat$X1)#
+		xt=rbind(tDat$X1,tDat$X2)#
+		x=rbind(x,xt)#
+		newx=as.data.frame(matrix(NA,nrow(x),0))#
+	}#
+	for (j in 1:ncol(x)){#
+		tempx=x[,j]#
+		if (length(unique(tempx))<=2){#
+			names(tempx)=colnames(x)[j]#
+			newx=cbind(newx,tempx)#
+		}else{#
+			if (k>0){#
+				xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)#
+				addx=matrix(NA,nrow(x),k+c)#
+				addx[,1:c]=outer(tempx,1:c,'^')#
+				h=outer(tempx,xi,'-')#
+				addx[,(c+1):(c+k)]=(h*(h>0))^c#
+				colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))#
+				newx=cbind(newx,addx)	#
+			}else{#
+				addx=matrix(NA,nrow(x),k+c)#
+				addx[,1:c]=outer(tempx,1:c,'^')#
+				}#
+		}#
+	}#
+	rownames(newx)=rownames(x)#
+	sDat=list(X1=NULL,X2=NULL)#
+	sDat$X1=newx[1:m,]#
+	sDat$X2=newx[(m+1):(2*m),]#
+	output=list(sDat=sDat)#
+	if (!is.null(tDat)){#
+		stDat$X1=newx[(2*m+1):(2*m+m1),]#
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1),]#
+		output=list(sDat=sDat,stDat=stDat)#
+	}#
+	output#
+}
+SDat=spl(norDat,3,0,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,3,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=100 #number of pairs in testing data#
+N=100# number of samples in posterior sampling#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=1000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=1000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=2000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)/tm#
+loss_s(b,sDat)/m
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=2000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)/tm#
+loss_s(b,sDat)/m
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=2000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)/tm#
+loss_s(b,sDat)/m
+tm=20000 #number of pairs in testing data
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=100 #number of pairs in training data#
+tm=20000 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+SDat=spl(norDat,2,1,ntDat)#
+sDat=SDat$sDat#
+stDat=SDat$stDat#
+result=SA_s(sDat,1)#
+b=result$b#
+loss_s(b,stDat)/tm#
+loss_s(b,sDat)/m
+rm(list=ls())
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:3#
+K=0:2#
+i=1#
+j=1#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+#
+for (pow in Pow){#
+	for (k in K){#
+		SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2#
+		j=j+1#
+	}#
+	i=i+1#
+}
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:3#
+K=0:2#
+i=1#
+j=1#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+#
+for (pow in Pow){#
+	for (k in K){#
+		SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2#
+		j=j+1#
+	}#
+	i=i+1#
+}
 i
+j
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:3#
+K=0:2#
+i=1#
+j=1#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+#
+for (pow in Pow){#
+	j=1#
+	for (k in K){#
+		SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2#
+		j=j+1#
+	}#
+	i=i+1#
+}
+pow=2
+k=1
+SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2
+pow=1
+k=0
+SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)
+b
+sDat
+ntDat
+SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)
+b
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:3#
+K=0:0#
+i=1#
+j=1#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+#
+for (pow in Pow){#
+	j=1#
+	for (k in K){#
+		SDat=spl(norDat,pow,k,ntDat)#
+		sDat=SDat$sDat#
+		stDat=SDat$stDat#
+		result=SA_s(sDat,1)#
+		b=result$b#
+		e1=loss_s(b,stDat)/tm#
+		e2=loss_s(b,sDat)/m#
+		msg1=sprintf("power: %f, nknots: %f",pow,k)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2#
+		j=j+1#
+	}#
+	i=i+1#
+}
 Dat=read.table("pyrim.data",sep=",")#
 colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
 source("./functions.r")#
@@ -2380,7 +1851,6 @@ y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 m=10 #number of pairs in training data#
 tm=20 #number of pairs in testing data#
-N=100# number of samples in posterior sampling#
 #
 newDat=samplepairs(m,Dat,y)#
 tDat=samplepairs(tm,Dat,y)#
@@ -2393,8 +1863,12 @@ ntDat0=normbyran(tDat,ranDat)#
 #
 cDat=convertDat(norDat)#
 #estimate fI#
-Kappa=1:10#
-Phi=(1:10)*0.2#
+Kappa=1:3#
+Phi=(1:3)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+i=1#
 for (kap in Kappa){#
 	kernel1<-function(x1,x2,kappa=kap){#
 		#kernal function to generate Sigma#
@@ -2402,6 +1876,7 @@ for (kap in Kappa){#
 		K=exp(-kappa*k/2)#
 		K#
 	}#
+	j=1#
 	for (phi in Phi){#
 		result=SA_GP(cDat,phi)#
 		fI=result$fI#
@@ -2427,10 +1902,367 @@ for (kap in Kappa){#
 			err[i]=I(Y[1]<Y[2])#
 		}#
 		e2=mean(err)#
-		e3=loss_GP(fI,cDat$pairs)#
+		e3=loss_GP(fI,cDat$pairs)/m#
 		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
 		print(msg1)#
 		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
 		print(msg2)#
+		E1[i,j]=e1#
+		E2[i,j]=e2#
+		E3[i,j]=e3#
+		j=j+1#
 	}#
+	i=i+1#
 }
+i
+j
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#
+#first norm to [-1,1]#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat0=normbyran(tDat,ranDat)#
+#
+cDat=convertDat(norDat)#
+#estimate fI#
+Kappa=1:3#
+Phi=(1:3)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+l=1#
+for (kap in Kappa){#
+	kernel1<-function(x1,x2,kappa=kap){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	j=1#
+	for (phi in Phi){#
+		result=SA_GP(cDat,phi)#
+		fI=result$fI#
+		Sig=result$Sig#
+		#predict for test set and calculate error rate#
+		err=rep(NA,tm)#
+		x=cDat$points#
+		#normalize test data first#
+		ntDat=ntDat0		#
+		for (i in 1:tm){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}#
+		e1=mean(err)#
+		err=rep(NA,m)#
+		ntDat=norDat#
+		for (i in 1:m){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}#
+		e2=mean(err)#
+		e3=loss_GP(fI,cDat$pairs)/m#
+		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
+		print(msg2)#
+		E1[l,j]=e1#
+		E2[l,j]=e2#
+		E3[l,j]=e3#
+		j=j+1#
+	}#
+	l=l+1#
+}
+E1
+save(E1,E2,E3,'temp.Rdata')
+save(E1,E2,E3,"temp.Rdata")
+save(E1,E2,E3,file="temp.Rdata")
+geterr_GP<-fucntion(ntDat,x,Sig,fI){#
+	err=rep(NA,tm)#
+	tm=nrow(ntDat[[1]])#
+	for (i in 1:tm){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}#
+	e=mean(err)#
+	e#
+}
+geterr_GP*ntDat,x,Sig,fI_
+geterr_GP*ntDat,x,Sig,fI)
+geterr_GP(ntDat,x,Sig,fI)
+geterr_GP<-fucntion(ntDat,x,Sig,fI){#
+	err=rep(NA,tm)#
+	tm=nrow(ntDat[[1]])#
+	for (i in 1:tm){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}#
+	e=mean(err)#
+	e#
+}
+geterr_GP<-function(ntDat,x,Sig,fI){#
+	err=rep(NA,tm)#
+	tm=nrow(ntDat[[1]])#
+	for (i in 1:tm){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}#
+	e=mean(err)#
+	e#
+}
+geterr_GP(ntDat,x,Sig,fI)
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#
+#first norm to [-1,1]#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat0=normbyran(tDat,ranDat)#
+#
+cDat=convertDat(norDat)#
+#estimate fI#
+Kappa=1:10#
+Phi=(1:10)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+l=1#
+for (kap in Kappa){#
+	kernel1<-function(x1,x2,kappa=kap){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	j=1#
+	for (phi in Phi){#
+		result=SA_GP(cDat,phi)#
+		fI=result$fI#
+		Sig=result$Sig#
+		#predict for test set and calculate error rate#
+		x=cDat$points#
+		e1=geterr_GP(ntDat0,x,Sig,fI)#
+		e2=geterr_GP(norDat,x,Sig,fI)#
+		e3=loss_GP(fI,cDat$pairs)/m#
+		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
+		print(msg2)#
+		E1[l,j]=e1#
+		E2[l,j]=e2#
+		E3[l,j]=e3#
+		j=j+1#
+	}#
+	l=l+1#
+}#
+save(E1,E2,E3,file="errors_GP.Rdata")
+e2=geterr_GP(norDat,x,Sig,fI)
+e2
+ntDat=norDat
+err=rep(NA,tm)#
+	tm=nrow(ntDat[[1]])
+tm
+for (i in 1:tm){#
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])#
+			coSig=getcov(xt,x,kernel1)#
+			Y=pre_GP(coSig,Sig,fI)#
+			err[i]=I(Y[1]<Y[2])#
+		}
+err
+tm
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#
+#first norm to [-1,1]#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat0=normbyran(tDat,ranDat)#
+#
+cDat=convertDat(norDat)#
+#estimate fI#
+Kappa=1:10#
+Phi=(1:10)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+l=1#
+for (kap in Kappa){#
+	kernel1<-function(x1,x2,kappa=kap){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	j=1#
+	for (phi in Phi){#
+		result=SA_GP(cDat,phi)#
+		fI=result$fI#
+		Sig=result$Sig#
+		#predict for test set and calculate error rate#
+		x=cDat$points#
+		e1=geterr_GP(ntDat0,x,Sig,fI)#
+		e2=geterr_GP(norDat,x,Sig,fI)#
+		e3=loss_GP(fI,cDat$pairs)/m#
+		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
+		print(msg2)#
+		E1[l,j]=e1#
+		E2[l,j]=e2#
+		E3[l,j]=e3#
+		j=j+1#
+	}#
+	l=l+1#
+}#
+save(E1,E2,E3,file="errors_GP.Rdata")
+rm(list=ls())
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#
+#first norm to [-1,1]#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat0=normbyran(tDat,ranDat)#
+#
+cDat=convertDat(norDat)#
+#estimate fI#
+Kappa=1:10#
+Phi=(1:10)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+l=1#
+for (kap in Kappa){#
+	kernel1<-function(x1,x2,kappa=kap){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	j=1#
+	for (phi in Phi){#
+		result=SA_GP(cDat,phi)#
+		fI=result$fI#
+		Sig=result$Sig#
+		#predict for test set and calculate error rate#
+		x=cDat$points#
+		e1=geterr_GP(ntDat0,x,Sig,fI)#
+		e2=geterr_GP(norDat,x,Sig,fI)#
+		e3=loss_GP(fI,cDat$pairs)/m#
+		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
+		print(msg2)#
+		E1[l,j]=e1#
+		E2[l,j]=e2#
+		E3[l,j]=e3#
+		j=j+1#
+	}#
+	l=l+1#
+}#
+save(E1,E2,E3,file="errors_GP.Rdata")
+Dat=read.table("pyrim.data",sep=",")#
+colnames(Dat)=read.table("pyrim.domain",sep=":")$V1#
+source("./functions.r")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+m=10 #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#
+#first norm to [-1,1]#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat0=normbyran(tDat,ranDat)#
+#
+cDat=convertDat(norDat)#
+#estimate fI#
+Kappa=1:10#
+Phi=(1:10)*0.2#
+E1=matrix(NA,length(Kappa),length(Phi))#
+E2=E1#
+E3=E1#
+l=1#
+for (kap in Kappa){#
+	kernel1<-function(x1,x2,kappa=kap){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	j=1#
+	for (phi in Phi){#
+		result=SA_GP(cDat,phi)#
+		fI=result$fI#
+		Sig=result$Sig#
+		#predict for test set and calculate error rate#
+		x=cDat$points#
+		e1=geterr_GP(ntDat0,x,Sig,fI)#
+		e2=geterr_GP(norDat,x,Sig,fI)#
+		e3=loss_GP(fI,cDat$pairs)/m#
+		msg1=sprintf("kappa: %f, phi: %f",kap,phi)#
+		print(msg1)#
+		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)#
+		print(msg2)#
+		E1[l,j]=e1#
+		E2[l,j]=e2#
+		E3[l,j]=e3#
+		j=j+1#
+	}#
+	l=l+1#
+}#
+save(E1,E2,E3,file="errors_GP.Rdata")

@@ -156,6 +156,19 @@ pre_GP<-function(coSig,Sig,f){
 	Y=t(coSig)%*%Sig%*%matrix(f,ncol=1)
 	Y
 }
+
+geterr_GP<-function(ntDat,x,Sig,fI){
+	tm=nrow(ntDat[[1]])
+	err=rep(NA,tm)
+	for (i in 1:tm){
+			xt=rbind(ntDat$X1[i,],ntDat$X2[i,])
+			coSig=getcov(xt,x,kernel1)
+			Y=pre_GP(coSig,Sig,fI)
+			err[i]=I(Y[1]<Y[2])
+		}
+	e=mean(err)
+	e
+}
 normto1<-function(x){
 	normDat=list(X1=NULL,X2=NULL)
 	Tdata=rbind(x$X1,x$X2)
@@ -189,32 +202,52 @@ normbyran<-function(x,ran){
 	x$X2=Tdat[(nr+1):(2*nr),]-1
 	x
 }
-cubicspl<-function(Dat,k){
+spl<-function(Dat,c,k,tDat=NULL){
 	#function to get cubic splines with k knots in each dimension
 	x=rbind(Dat$X1,Dat$X2)
 	m=nrow(Dat$X1)
 	newx=as.data.frame(matrix(NA,nrow(x),0))
+	if (!is.null(tDat)){
+		m1=nrow(tDat$X1)
+		xt=rbind(tDat$X1,tDat$X2)
+		x=rbind(x,xt)
+		newx=as.data.frame(matrix(NA,nrow(x),0))
+	}
+	
 	for (j in 1:ncol(x)){
 		tempx=x[,j]
 		if (length(unique(tempx))<=2){
 			names(tempx)=colnames(x)[j]
 			newx=cbind(newx,tempx)
-			
 		}else{
-			xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
-			addx=matrix(NA,nrow(x),k+3)
-			addx[,1:3]=outer(tempx,1:3,'^')
-			h=outer(tempx,xi,'-')
-			addx[,4:(3+k)]=(h*(h>0))^3
-			colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(k+3))
-			newx=cbind(newx,addx)	
+			if (k>0){
+				xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
+				addx=matrix(NA,nrow(x),k+c)
+				addx[,1:c]=outer(tempx,1:c,'^')
+				h=outer(tempx,xi,'-')
+				addx[,(c+1):(c+k)]=(h*(h>0))^c
+				colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))
+				newx=cbind(newx,addx)	
+			}else{
+				addx=matrix(NA,nrow(x),k+c)
+				addx[,1:c]=outer(tempx,1:c,'^')
+				colnames(addx)=sprintf("%s%i",colnames(x)[j],1:(c+k))
+				newx=cbind(newx,addx)	
+				}
 		}
 	}
 	rownames(newx)=rownames(x)
 	sDat=list(X1=NULL,X2=NULL)
 	sDat$X1=newx[1:m,]
 	sDat$X2=newx[(m+1):(2*m),]
-	sDat
+	output=list(sDat=sDat)
+	if (!is.null(tDat)){
+		stDat=list(X1=NULL,X2=NULL)
+		stDat$X1=newx[(2*m+1):(2*m+m1),]
+		stDat$X2=newx[(2*m+m1+1):(2*m+2*m1),]
+		output=list(sDat=sDat,stDat=stDat)
+	}
+	output
 }
 
 loss_s=function(b,sDat){
@@ -237,13 +270,13 @@ SA_s<-function(sDat,phi=1){
 	#initialize
 	b=rmvnorm(1,rep(0,ps),Sig)
 	b=b/sqrt(sum(b^2))*r
-	q=phi*loss_s(b,sDat)-dmvnorm(b,mean=rep(0,ps),sigma=Sig,log=TRUE)
+	q=phi*loss_s(b,sDat)
 	count=0
 	#move
 	for (k in 1:kmax){
 
 		newb=MoveonSph(b,sig,r)
-		newq=phi*loss_s(newb,sDat)-dmvnorm(newb,mean=rep(0,ps),sigma=Sig,log=TRUE)
+		newq=phi*loss_s(newb,sDat)
 		temp=runif(1,0,1)
 		if (temp<(exp(tolc*(q-newq)))){
 			b=newb
