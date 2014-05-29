@@ -189,8 +189,10 @@ normbyran<-function(x,ran){
 	x$X2=Tdat[(nr+1):(2*nr),]-1
 	x
 }
-cubicspl<-function(x,k){
+cubicspl<-function(Dat,k){
 	#function to get cubic splines with k knots in each dimension
+	x=rbind(Dat$X1,Dat$X2)
+	m=nrow(Dat$X1)
 	newx=as.data.frame(matrix(NA,nrow(x),0))
 	for (j in 1:ncol(x)){
 		tempx=x[,j]
@@ -209,13 +211,62 @@ cubicspl<-function(x,k){
 		}
 	}
 	rownames(newx)=rownames(x)
-	newx
+	sDat=list(X1=NULL,X2=NULL)
+	sDat$X1=newx[1:m,]
+	sDat$X2=newx[(m+1):(2*m),]
+	sDat
 }
 
-losssum<-function(est){
-	#est has two elements in the list $Y1 and $Y2
-	S=sum(est$Y2>est$Y1)
-	S
+loss_s=function(b,sDat){
+	Y=matrix(NA,nrow=nrow(sDat[[1]]),ncol=2)
+	for (i in 1:2){
+		Y[,i]=as.matrix(sDat[[i]])%*%matrix(b,ncol=1)
+	}
+	loss=sum(Y[,1]<Y[,2])
+	loss
+}
+	
+SA_s<-function(sDat,phi=1){
+	#try to minimize q=l-log(p)
+	kmax=1e4
+	sig=0.5 #initial jump sd
+	tolc=1 #initial tol
+	ps=ncol(sDat[[1]])
+	r=sqrt(ps)
+	Sig=diag(ps)
+	#initialize
+	b=rmvnorm(1,rep(0,ps),Sig)
+	b=b/sqrt(sum(b^2))*r
+	q=phi*loss_s(b,sDat)-dmvnorm(b,mean=rep(0,ps),sigma=Sig,log=TRUE)
+	count=0
+	#move
+	for (k in 1:kmax){
+
+		newb=MoveonSph(b,sig,r)
+		newq=phi*loss_s(newb,sDat)-dmvnorm(newb,mean=rep(0,ps),sigma=Sig,log=TRUE)
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			b=newb
+			q=newq
+			count=count+1
+		}
+		if ((k%%1000)==0){
+			
+			#adjust tol and sig by accept rate
+			accrate=count/1000
+			if (accrate>0.2){
+				tolc=tolc*5
+			}
+			if (accrate<0.2){
+				sig=sig*0.75
+			}
+			if (accrate==0){
+				break
+			}
+			count=0
+		}
+	}
+	list(b=b,q=q)
 }
 
 
