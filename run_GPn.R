@@ -18,14 +18,16 @@ tm=2000 #number of pairs in testing data
 newDat=samplepairs(m,Dat,y)
 tDat=samplepairs(tm,Dat,y)
 
-
-norDat=newDat
-ntDat0=tDat
+#first norm to [-1,1]
+nDat=normto1(newDat)
+norDat=nDat$normDat
+ranDat=nDat$ran
+ntDat0=normbyran(tDat,ranDat)
 
 cDat=convertDat(norDat)
 #estimate fI
-Kappa=1:20
-Phi=(11:20)*0.2
+Kappa=1:10
+Phi=(1:10)*0.2
 E1=matrix(NA,length(Kappa),length(Phi))
 E2=E1
 E3=E1
@@ -60,6 +62,5 @@ for (kap in Kappa){
 	}
 	l=l+1
 }
-
-savefile=sprintf("%s_GP%i.Rdata",Name,nameind)
+savefile=sprintf("%s_GPn%i.Rdata",Name,nameind)
 save(E1,E2,E3,file=savefile)
