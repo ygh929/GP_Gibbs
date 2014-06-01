@@ -291,12 +291,13 @@ SA_s<-function(sDat,phi=1){
 				tolc=tolc*5
 			}
 			if (accrate<0.2){
-				sig=sig*0.75
+				sig=sig*0.9
 			}
 			if (accrate==0){
 				break
 			}
 			count=0
+			print(k)
 		}
 	}
 	list(b=b,q=q)

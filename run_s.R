@@ -1,6 +1,6 @@
 Names=c("pyrim","triazines","machine","housing","abalone")
 N=c(100,300,500,700,1000)
-nameind=5
+nameind=1
 Name=Names[nameind]
 datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
@@ -12,7 +12,7 @@ y=Dat[,nc]
 Dat=Dat[,1:(nc-1)]
 
 m=N[nameind] #number of pairs in training data
-tm=20000 #number of pairs in testing data
+tm=20 #number of pairs in testing data
 newDat=samplepairs(m,Dat,y)
 tDat=samplepairs(tm,Dat,y)
 #sieve approach

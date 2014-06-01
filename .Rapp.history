@@ -1,66 +1,105 @@
-load("/Users/Yi/Desktop/ranking/code/errs.Rdata")
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/pyrim_s1.Rdata")
 ls
 ls()
 TE1
-TE2
-TE1
-E=matrix(0,3,3)
-for (i in 1:20){
-E=E+TE1[[i]]}
-E
-E/20
-load("/Users/Yi/Desktop/ranking/code/errGP.Rdata")
+for (i in 1:20){}
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/triazines_s2.Rdata")
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
 ls
 ls()
-E1
-min(E1)
-E
-E/20
-E2
-E1
-E3
-Name="triazines"#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1
-datname
-datname=as.string(sprintf("%s.data",Name))
-??string
-Dat=read.table(file=sprintf("%s.data",Name),sep=",")
-file.choose()
-Dat=read.table(file=sprintf("./%s.data",Name),sep=",")
-sprintf("./%s.data",Name)
-f=file.choose()
-f
-read.table(f)
-Dat=read.table(sprintf("%s.data",Name),sep=",")
-f
-sprintf("%s.data",Name)
-Name="abalone"
-Dat=read.table(sprintf("%s.data",Name),sep=",")
-sprintf("%s.data",Name)
-Dat=read.table(sprintf("abalone.data",sep=",")
-Dat=read.table("abalone.data",sep=",")
-setwd("./GP_Gibbs/")
-Dat=read.table(sprintf("abalone.data",sep=",")
-Dat=read.table(sprintf("%s.data",Name),sep=",")
-Name="abalone"#
-datname=as.string(sprintf("./%s.data",Name))#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1
-Name="abalone"#
-datname=as.string(sprintf("%s.data",Name))#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/machine_s3.Rdata")
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+TE1
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/housing_s4.Rdata")
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/abalone_s5.Rdata")
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
+load("/Users/Yi/Desktop/ranking/result/05-31-2014/pyrim_s1.Rdata")
+Me=matrix(0,5,5)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE1[[i]]#
+}#
+Me=Me/20#
+Me
+Me=matrix(0,4,4)#
+for (i in 1:20){#
+	Me=Me+TE2[[i]]#
+}#
+Me=Me/20#
+Me
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
 nameind=1#
 Name=Names[nameind]#
-datname=as.string(sprintf("%s.data",Name))#
+datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
 Dat=read.table(file=datname,sep=",")#
 colnames(Dat)=read.table(file=domname,sep=":")$V1#
@@ -69,8 +108,53 @@ nc=ncol(Dat)#
 y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 #
-m=N[nameind] #number of pairs in training data
-rm(list=ls())
+m=N[nameind] #number of pairs in training data#
+tm=20000 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:4#
+K=0:3#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:20){#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,1)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}#
+#
+savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
+save(TE1,TE2,file=savefile)
+setwd("../..")
+setwd("./code/GP_Gibbs/")
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
 nameind=1#
@@ -82,10 +166,56 @@ colnames(Dat)=read.table(file=domname,sep=":")$V1#
 source("./functions.R")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
+Dat=Dat[,1:(nc-1)]#
+#
+m=N[nameind] #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:4#
+K=0:3#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:20){#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,1)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}#
+#
+savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
+save(TE1,TE2,file=savefile)
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=2#
+nameind=1#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -94,10 +224,56 @@ colnames(Dat)=read.table(file=domname,sep=":")$V1#
 source("./functions.R")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
+Dat=Dat[,1:(nc-1)]#
+#
+m=N[nameind] #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:4#
+K=0:3#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:20){#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,1)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}#
+#
+savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
+save(TE1,TE2,file=savefile)
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=3#
+nameind=1#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -106,43 +282,51 @@ colnames(Dat)=read.table(file=domname,sep=":")$V1#
 source("./functions.R")#
 nc=ncol(Dat)#
 y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=4#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=5#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=5#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]
-savefile=sprintf("%s_GPn.Rdata%i",Name,nameind)
-save(E1,E2,E3,file=savefile)
-savefile
+Dat=Dat[,1:(nc-1)]#
+#
+m=N[nameind] #number of pairs in training data#
+tm=20 #number of pairs in testing data#
+newDat=samplepairs(m,Dat,y)#
+tDat=samplepairs(tm,Dat,y)#
+#sieve approach#
+nDat=normto1(newDat)#
+norDat=nDat$normDat#
+ranDat=nDat$ran#
+ntDat=normbyran(tDat,ranDat)#
+#
+Pow=1:4#
+K=0:3#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:20){#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,1)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}#
+#
+savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
+save(TE1,TE2,file=savefile)
+quit()
