@@ -1,7 +1,7 @@
 #sample pairs from the data
 
 library(mvtnorm)#to generate rmvnorm
-
+library(boot) #to use inv.logit
 samplepairs<-function(m,Dat,y){
 	#get sample of pairs from the data
 	#values in X1 is preefered to values in X2
@@ -92,7 +92,7 @@ loss_GP=function(fI,pairs){
 	
 SA_GP<-function(cDat,phi=0.5){
 	#try to minimize q=l-log(p)
-	kmax=1e5
+	kmax=5e4
 	sig=0.5 #initial jump sd
 	tolc=1 #initial tol
 	x=cDat$points
@@ -147,8 +147,6 @@ getcov<-function(xt,x,ker){
 	}
 	Sigma
 }
-
-
 
 
 pre_GP<-function(coSig,Sig,f){
@@ -259,17 +257,22 @@ loss_s=function(b,sDat){
 	loss
 }
 	
-SA_s<-function(sDat,phi=1){
+SA_s<-function(sDat,phi=1,b0=NULL){
 	#try to minimize q=l-log(p)
-	kmax=1e4
+	kmax=5e4
 	sig=0.5 #initial jump sd
 	tolc=1 #initial tol
 	ps=ncol(sDat[[1]])
 	r=sqrt(ps)
 	Sig=diag(ps)
 	#initialize
-	b=rmvnorm(1,rep(0,ps),Sig)
-	b=b/sqrt(sum(b^2))*r
+	if (is.null(b0)){
+		b=rmvnorm(1,rep(0,ps),Sig)
+		b=b/sqrt(sum(b^2))*r
+	}else{
+		b=b0
+	}
+	
 	q=phi*loss_s(b,sDat)
 	count=0
 	#move
@@ -287,6 +290,67 @@ SA_s<-function(sDat,phi=1){
 			
 			#adjust tol and sig by accept rate
 			accrate=count/1000
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))
+			print(msg)
+			if (accrate>0.2){
+				tolc=tolc*5
+			}
+			if (accrate<0.2){
+				sig=sig*0.5
+			}
+			if (accrate==0){
+				#break
+			}
+			count=0
+			
+		}
+	}
+	list(b=b,q=q)
+}
+
+I1<-function(z,sig=0.01){
+	Ind=inv.logit(z/sig)
+	Ind
+}
+
+loss_s1=function(b,sDat){
+	Y=matrix(NA,nrow=nrow(sDat[[1]]),ncol=2)
+	for (i in 1:2){
+		Y[,i]=as.matrix(sDat[[i]])%*%matrix(b,ncol=1)
+	}
+	loss=sum(I1(Y[,2]-Y[,1]))
+	loss
+}
+
+
+SA_s1<-function(sDat,phi=1){
+	#try to minimize q=l-log(p)
+	kmax=5e4
+	sig=0.5 #initial jump sd
+	tolc=1 #initial tol
+	ps=ncol(sDat[[1]])
+	Sig=diag(ps)
+	#initialize
+	b=rmvnorm(1,rep(0,ps),Sig)
+	q=phi*loss_s1(b,sDat)-dmvnorm(b,log=T)
+	count=0
+	#move
+	for (k in 1:kmax){
+
+		newb=b+rnorm(ps,0,sig)
+		newq=phi*loss_s1(newb,sDat)-dmvnorm(newb,log=T)
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			b=newb
+			q=newq
+			count=count+1
+		}
+		if ((k%%1000)==0){
+
+			#adjust tol and sig by accept rate
+			accrate=count/1000
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))
+			print(msg)
 			if (accrate>0.2){
 				tolc=tolc*5
 			}
@@ -294,13 +358,93 @@ SA_s<-function(sDat,phi=1){
 				sig=sig*0.9
 			}
 			if (accrate==0){
-				break
+				#break
 			}
 			count=0
-			print(k)
 		}
 	}
 	list(b=b,q=q)
 }
 
 
+SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
+	#try to minimize q=l-log(p)
+	kmax=5e4
+	sig=0.5 #initial jump sd
+	tolc=1 #initial tol
+	ps=ncol(sDat[[1]])
+	r=sqrt(ps*rho)
+	#initialize
+	if (is.null(b0)){
+			b=rmvnorm(1,rep(0,ps))
+		S=rbinom(ps,1,rho)
+		b=b*S
+		b=b/sqrt(sum(b^2))*r
+	}else{
+		b=b0
+		S=b!=0	
+	}
+
+	adj0=dnorm(0)+log(rho)-log(1-rho)
+	bn0=b[S]
+	nn0=length(bn0)
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)
+	count=0
+	#move
+	for (k in 1:kmax){
+		move=0
+		change=sample(1:ps,1)
+		newS=S
+		newS[change]=1-S[change]
+		if (S[change]==1){
+			newb=b*newS
+			newb=newb/sqrt(sum(newb^2))*r
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))
+		}else{
+			newb=b
+			newb[change]=rnorm(1,mean=0,sd=sig)
+			newb=newb/sqrt(sum(newb^2))*r
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))
+		}
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			b=newb
+			S=newS
+			q=newq
+			move=move+1
+		}
+		newb=b
+		newb[S]=b[S]+rnorm(sum(S),0,sig)
+		newb=newb/sqrt(sum(newb^2))*r
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			b=newb
+			S=newS
+			q=newq
+			move=move+1
+		}
+		if (move>0){
+			count=count+1
+		}
+		if ((k%%1000)==0){
+			
+			#adjust tol and sig by accept rate
+			accrate=count/1000
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))
+			print(msg)
+			if (accrate>0.2){
+				tolc=tolc*5
+			}
+			if (accrate<0.2){
+				sig=sig*0.95
+			}
+			if (accrate==0){
+				#break
+			}
+			count=0
+			
+		}
+	}
+	list(b=b,q=q)
+}

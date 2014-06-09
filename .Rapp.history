@@ -1,103 +1,1440 @@
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/pyrim_s1.Rdata")
-ls
+simplex.y  <- function(x) {#
+  return( sqrt(0.75) *  x[3] / sum(x) )#
+} #
+simplex.x  <- function(x) {#
+  return( (x[2] + 0.5 * x[3]) / sum(x) )#
+}#
+#
+x  <- data.frame(#
+  x1 = c( 0, 0, 1, 0.1, 0.6, 0.2 ),#
+  x2 = c( 0, 1, 0, 0.3, 0.2, 0.8 ),#
+  x3 = c( 1, 0, 0, 0.6, 0.2, 0.0 )#
+)#
+#
+newDat <- data.frame(x = apply(x,1,simplex.x),#
+                y = apply(x,1,simplex.y))#
+#
+ggplot(newDat,aes(x = x,y = y)) + #
+    geom_point()
+require(ggplot2)
+simplex.y  <- function(x) {#
+  return( sqrt(0.75) *  x[3] / sum(x) )#
+} #
+simplex.x  <- function(x) {#
+  return( (x[2] + 0.5 * x[3]) / sum(x) )#
+}#
+#
+x  <- data.frame(#
+  x1 = c( 0, 0, 1, 0.1, 0.6, 0.2 ),#
+  x2 = c( 0, 1, 0, 0.3, 0.2, 0.8 ),#
+  x3 = c( 1, 0, 0, 0.6, 0.2, 0.0 )#
+)#
+#
+newDat <- data.frame(x = apply(x,1,simplex.x),#
+                y = apply(x,1,simplex.y))#
+#
+ggplot(newDat,aes(x = x,y = y)) + #
+    geom_point()
+paint <- data.frame(mono=c(17.5, 10, 15, 25, 5, 5, 11.25, 5, 18.13, 8.13, 25, 15, 10, 5),#
+                    cross=c(32.5, 40, 25, 25, 25, 32.5, 32.5, 40, 28.75, 28.75, 25, 25, 40, 25),#
+                    resin=c(50, 50, 60, 50, 70, 62.5, 56.25, 55, 53.13, 63.13, 50, 60, 50, 70),#
+                    hardness=c(29, 26, 17, 28, 35, 31, 21, 20, 29, 25, 19, 14, 30, 23))#
+#
+pseudo <- with(paint, data.frame(mono=(mono-5)/(25-5), resin=(resin-50)/(70-50)))#
+pseudo$cross <- with(pseudo, 1-mono-resin)#
+pseudo$hardness <- paint$hardness#
+#
+m1 <- lm(hardness~(mono+cross+resin)^2-mono, data=pseudo)#
+#
+trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+#
+new2 <- data.frame(cross=trian$high*2/sqrt(3))#
+new2$resin <- trian$base-trian$high/sqrt(3)#
+new2$mono <- 1-new2$resin-new2$cross#
+#
+trian$yhat <- predict(m1, newdata=new2)#
+#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)),#
+          panel=function(..., at, contour=TRUE, labels=NULL){#
+            panel.levelplot(..., at=at, contour=contour, #labels=labels,#
+                            lty=3, lwd=0.5, col=1)#
+          })#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(0, 0, label="mono", pos=2)#
+panel.text(1/2, sqrt(3)/2, label="cross", pos=3)#
+panel.text(1, 0, label="resin", pos=4)#
+trellis.unfocus()
+x1<-c(1,0,0,.5,.5,0,.33333,.33333,.33333)#
+x2<-c(0,1,0,.5,0,.5,.33333,.33333,.33333)#
+x3<-c(0,0,1,0,.5,.5,.33333,.33333,.33333)#
+y<-c(73,68,80,77,86,75,92,93,88)#
+des<-data.frame(x1,x2,x3,y)#
+MixturePlot(des=des,x3lab="Fraction C",x2lab="Fraction B",#
+   x1lab="Fraction A",corner.labs=c("C","B","A"),mod=3,n.breaks=5,cols=TRUE)
+MixturePlot(Dat[,1],Dat[,2],Dat[,3],Dat[,4],x3lab="Fraction C",x2lab="Fraction B",#
+   x1lab="Fraction A",corner.labs=c("C","B","A"),mod=3,n.breaks=5,cols=TRUE)
+Dat
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,4],x3lab="Fraction C",x2lab="Fraction B",#
+   x1lab="Fraction A",corner.labs=c("C","B","A"),mod=3,n.breaks=5,cols=TRUE)
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,5],x3lab="Fraction C",x2lab="Fraction B",#
+   x1lab="Fraction A",corner.labs=c("C","B","A"),mod=3,n.breaks=5,cols=TRUE)
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,5],mod=3,n.breaks=5,cols=TRUE)
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,5],mod=3,cols=TRUE)
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,5],mod=1,cols=TRUE)
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,5],mod=1)
+Generate triangular plot.#
+## Attach lattice library.#
+library(lattice)
+Generate triangular area for plotting.#
+trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)
+new <- data.frame(x2=trian$high*2/sqrt(3))#
+new$x3 <- trian$base-trian$high/sqrt(3)#
+new$x1 <- 1-new$x3-new$x2
+?levelplot
+Result
+x1=Result[,1]
+x2=Result[,2]
+x3=Result[,3]
+xy=Result[,4]
+Fit model to data.#
+m1 = lm(y ~ -1 + x1 + x2 + x3 + x1*x2 + x1*x3 + x2*x3)#
+#
+## Combine model effects for F test.#
+q = anova(m1)#
+mss = sum(q[1:6,2])#
+mdof = round(sum(q[1:6,1]),1)#
+mmse = mss/mdof#
+rss = q[7,2]#
+rdof = q[7,1]#
+mse = rss/rdof#
+#
+## Combine and print results.#
+residual = c(rdof,rss,mse,NA,NA)#
+model = c(mdof,mss,mmse,mmse/mse,df(mmse/mse,mdof,rdof))#
+a = data.frame(rbind(model,residual))#
+names(a) = c("DOF","Sum-of-Squares","MSE","F Value","Prob > F")#
+a#
+#
+>          DOF Sum-of-Squares         MSE F Value     Prob > F#
+> model      6        2878.27 479.7116667 658.141 1.547746e-13#
+> residual   9           6.56   0.7288889      NA           NA#
+#
+## Print summary of model fit.#
+summary(m1)#
+#
+> Call:#
+> lm(formula = y ~ -1 + x1 + x2 + x3 + x1 * x2 + x1 * x3 + x2 * #
+>     x3)#
+>#
+> Residuals:#
+>    Min     1Q Median     3Q    Max #
+>  -0.80  -0.50  -0.30   0.65   1.30 #
+>#
+> Coefficients:#
+>       Estimate Std. Error t value Pr(>|t|)    #
+> x1     11.7000     0.6037  19.381 1.20e-08 ***#
+> x2      9.4000     0.6037  15.571 8.15e-08 ***#
+> x3     16.4000     0.6037  27.166 6.01e-10 ***#
+> x1:x2  19.0000     2.6082   7.285 4.64e-05 ***#
+> x1:x3  11.4000     2.6082   4.371  0.00180 ** #
+> x2:x3  -9.6000     2.6082  -3.681  0.00507 ** #
+> ---#
+> Signif. codes:  0 �***� 0.001 �**� 0.01 �*� 0.05 �.� 0.1 � � 1 #
+>#
+> Residual standard error: 0.8537 on 9 degrees of freedom#
+> Multiple R-squared: 0.9977,     Adjusted R-squared: 0.9962 #
+> F-statistic: 658.1 on 6 and 9 DF,  p-value: 2.271e-11 #
+## Generate triangular plot.#
+## Attach lattice library.#
+library(lattice)#
+#
+## Generate triangular area for plotting.#
+trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+#
+new <- data.frame(x2=trian$high*2/sqrt(3))#
+new$x3 <- trian$base-trian$high/sqrt(3)#
+new$x1 <- 1-new$x3-new$x2#
+#
+## Predict triangular surface based on regression model.#
+trian$yhat <- predict(m1, newdata=new)#
+#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+m1
+m1 = lm(y ~ -1 + x1 + x2 + x3 + x1*x2 + x1*x3 + x2*x3)
+length(x1)
+length(x2)
+length(x3)
+length(x4)
+length(y)
+y=Result[,4]
+length(y)
+Fit model to data.#
+m1 = lm(y ~ -1 + x1 + x2 + x3 + x1*x2 + x1*x3 + x2*x3)#
+#
+## Combine model effects for F test.#
+q = anova(m1)#
+mss = sum(q[1:6,2])#
+mdof = round(sum(q[1:6,1]),1)#
+mmse = mss/mdof#
+rss = q[7,2]#
+rdof = q[7,1]#
+mse = rss/rdof#
+#
+## Combine and print results.#
+residual = c(rdof,rss,mse,NA,NA)#
+model = c(mdof,mss,mmse,mmse/mse,df(mmse/mse,mdof,rdof))#
+a = data.frame(rbind(model,residual))#
+names(a) = c("DOF","Sum-of-Squares","MSE","F Value","Prob > F")#
+a#
+#
+>          DOF Sum-of-Squares         MSE F Value     Prob > F#
+> model      6        2878.27 479.7116667 658.141 1.547746e-13#
+> residual   9           6.56   0.7288889      NA           NA#
+#
+## Print summary of model fit.#
+summary(m1)#
+#
+> Call:#
+> lm(formula = y ~ -1 + x1 + x2 + x3 + x1 * x2 + x1 * x3 + x2 * #
+>     x3)#
+>#
+> Residuals:#
+>    Min     1Q Median     3Q    Max #
+>  -0.80  -0.50  -0.30   0.65   1.30 #
+>#
+> Coefficients:#
+>       Estimate Std. Error t value Pr(>|t|)    #
+> x1     11.7000     0.6037  19.381 1.20e-08 ***#
+> x2      9.4000     0.6037  15.571 8.15e-08 ***#
+> x3     16.4000     0.6037  27.166 6.01e-10 ***#
+> x1:x2  19.0000     2.6082   7.285 4.64e-05 ***#
+> x1:x3  11.4000     2.6082   4.371  0.00180 ** #
+> x2:x3  -9.6000     2.6082  -3.681  0.00507 ** #
+> ---#
+> Signif. codes:  0 �***� 0.001 �**� 0.01 �*� 0.05 �.� 0.1 � � 1 #
+>#
+> Residual standard error: 0.8537 on 9 degrees of freedom#
+> Multiple R-squared: 0.9977,     Adjusted R-squared: 0.9962 #
+> F-statistic: 658.1 on 6 and 9 DF,  p-value: 2.271e-11 #
+## Generate triangular plot.#
+## Attach lattice library.#
+library(lattice)#
+#
+## Generate triangular area for plotting.#
+trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+#
+new <- data.frame(x2=trian$high*2/sqrt(3))#
+new$x3 <- trian$base-trian$high/sqrt(3)#
+new$x1 <- 1-new$x3-new$x2#
+#
+## Predict triangular surface based on regression model.#
+trian$yhat <- predict(m1, newdata=new)#
+#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+trian
+?expand.grid
+trian[1,]
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=tet_dens(Dat,metric)
+trian=get_dens(Dat,metric)
+Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+## Generate triangular contour plot.#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=TRUE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    	y1=y1-max(y1)#
+    	y2=y2-max(y2)#
+    	y3=y3-max(y3)#
+    	y1=exp(y1)#
+    	y2=exp(y2)#
+    	y3=exp(y3)#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+get_dens(Dat,metrix)
+get_dens(Dat,metric)
+trian=get_dens(Dat,metric)
+trian$y1[1]
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    	y1=y1-max(y1)#
+    	y2=y2-max(y2)#
+    	y3=y3-max(y3)#
+    	#y1=exp(y1)#
+    	y2=exp(y2)#
+    	y3=exp(y3)#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+trian$y1[1]
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    	#y1=y1-max(y1)#
+    	y2=y2-max(y2)#
+    	y3=y3-max(y3)#
+    	#y1=exp(y1)#
+    	y2=exp(y2)#
+    	y3=exp(y3)#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+trian$y1[1]
+exp(-inf)
+exp(-Inf)
+max(trian$y1)
+-Inf+12.9
+sum(is.infinite(trian$y1))
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    	y1=y1-max(y1)#
+    	y2=y2-max(y2)#
+    	y3=y3-max(y3)#
+    	#y1=exp(y1)#
+    	y2=exp(y2)#
+    	y3=exp(y3)#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+sum(is.infinite(trian$y1))
+y1
+trian$y1
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    	#y1=y1-max(y1)#
+    	y2=y2-max(y2)#
+    	y3=y3-max(y3)#
+    	#y1=exp(y1)#
+    	y2=exp(y2)#
+    	y3=exp(y3)#
+    }#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+trian$y1
+y1=trian$y1
+max(y1)
+y1-max(y1)
+y1=y1-max(y1)
+y1
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=T, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Dat=c(10,4,6)
+trian=get_dens(Dat,metric)#
+#
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+device.new()
+dev.new()
+trian=get_dens(Dat,metric)#
+#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+Dat
+metric=function(x,y){#
+	return(abs(x-y)^2)#
+}
+metric=function(x,y){#
+	return(abs(x-y)^2)#
+}#
+#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
+#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}#
+#
+trian=get_dens(Dat,metric)#
+#
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+dev.new()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=TRUE, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="x2",pos=2)#
+panel.text(.1,.45,label="x1",pos=4)#
+panel.text(.5,-.05,label="x3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))
+grade.trellis()
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+I(1!=2)
+I(1!=2)*1
+metric=function(x,y){#
+	return(1*I(x!=y))#
+}
+trian=get_dens(Dat,metric)
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, colorkey=TRUE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+?levelplot
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE, #
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)),default.theme=standard.theme(color=F))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=tray(0:100/100)#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/100),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(0:100/20),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL, contour=F, labels=FALSE,col.regions=gray(100:200/200),#
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         )#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")))#
+         col=graey(sqe(100,200,20)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=graey(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(sqe(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),#
+         labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+colorkey=list(at=as.numeric(factor(c(seq(from=0,to=1,by=0.2)))),labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200)))
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=as.character(c("0","0.2","0.4","0.6","0.8","1")),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         #par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=1)),#
+         colorkey=list(at=seq(0,1,0.2),    labels=c("0","0.2","0.4","0.6","0.8","1"),col=gray(seq(100,200,20)/200))#
+         )
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+y1
+min(trian$y1)
+min(trian$y2)
+min(trian$y3)
+require(mixexp)#
+#
+l1=function(Dat,p){#
+	#likelihood function#
+	l=matrix(Dat,1,3)%*%as.matrix(log(p),1,3)#
+	return(l)#
+}#
+#
+l2=function(Dat,metric,p){#
+	#expectation of loss function#
+	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
+	return(l)#
+}#
+#
+l3=function(Dat,metric,p){#
+	#original loss function#
+	rhat=which.max(p)#
+	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
+	return(l)#
+}#
+#
+metric=function(x,y){#
+	return((x-y)^2)#
+}#
+#
+## Create function to place grid lines and axis labels on the plot.#
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){#
+  x1 <- seq(from, to, step)#
+  x2 <- x1/2#
+  y2 <- x1*sqrt(3)/2#
+  x3 <- (1-x1)*0.5+x1#
+  y3 <- sqrt(3)/2-x1*sqrt(3)/2#
+  panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x1, 0, label=x1, pos=1)#
+  panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)#
+  panel.text(x2, y2, label=rev(x1), pos=2)#
+  panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)#
+  panel.text(x3, y3, label=rev(x1), pos=4)#
+}#
+#
+#a function to calculate 'likelihood' in 3 different ways#
+Dat=c(10,4,6)#
+#
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	trian <- expand.grid(base=seq(0,1,l=100*2), high=seq(0,sin(pi/3),l=87*2))#
+	trian <- subset(trian, (base*sin(pi/3)*2)>high)#
+	trian <- subset(trian, ((1-base)*sin(pi/3)*2)>high)#
+	p2=trian$high*2/sqrt(3)#
+    p3=trian$base-trian$high/sqrt(3)#
+    p1=1-p3-p2#
+    y1=matrix(0,0,1)#
+    y2=matrix(0,0,1)#
+    y3=matrix(0,0,1)#
+    for (i in 1:length(p1)){#
+    	p=c(p1[i],p2[i],p3[i])#
+    	y1=rbind(y1,l1(Dat,p))#
+    	y2=rbind(y2,l2(Dat,metric,p))#
+    	y3=rbind(y3,l3(Dat,metric,p))#
+    }#
+    y1=y1-max(y1)#
+    y2=y2-max(y2)#
+   	y3=y3-max(y3)#
+   	y1=exp(y1)#
+   	y2=exp(y2)#
+   	y3=exp(y3)#
+    trian$y1=y1#
+    trian$y2=y2#
+    trian$y3=y3#
+#
+	return(trian)#
+}
+trian=get_dens(Dat,metric)
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(100:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.05,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,-.,label="p3",pos=1)#
+trellis.unfocus()
+trian=get_dens(Dat,metric)#
+#
+levelplot(y3~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y2~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+levelplot(y1~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,1.1),#
+          xlab=NULL, ylab=NULL,contour=F,labels=FALSE,col.regions=gray(50:200/200),#
+         par.settings=list(axis.line=list(col=NA),axis.text=list(col=NA)))#
+trellis.focus("panel", 1, 1, highlight=FALSE)#
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))#
+grade.trellis()#
+panel.text(.9,.45,label="p2",pos=2)#
+panel.text(.1,.45,label="p1",pos=4)#
+panel.text(.5,0,label="p3",pos=1)#
+trellis.unfocus()
+vc=6#
+eps=0.01#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+512*vc/eps^2*log(256*vc/eps^2)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+e^(n*eps^2)/256
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^nc#
+exp((n*eps^2)/256)
+vc=6#
+eps=1#
+n=512*vc/(eps^2)*log(256*vc/(eps^2))#
+n^vc#
+exp((n*eps^2)/256)
+1-pnorm(1.776)
+dnorm(0)
+setwd("./Desktop/ranking/code/GP_Gibbs/")
+open()
+library(mtvnorm)
+library(mvnorm)
+source("./functions.R")
+rmvnorm(1,rep(0,5))
+rm(list=ls())
+setwd("../../result/06-06-2014/")
+Names=c("pyrim","triazines","machine","housing","abalone")#
+Err=list#
+E1=list()#
+E2=list()#
+for (i in 1:5){#
+	load(sprintf("./%s_s%i.Rdata",Names[i],i))#
+#
+	E1[[i]]=TE1[[1]]#
+	E2[[i]]=TE2[[1]]#
+	for (j in 2:length(TE1)){#
+		E1[[i]]=E1[[i]]+TE1[[j]]#
+		E2[[i]]=E2[[i]]+TE2[[j]]#
+	}#
+	E1[[i]]=E1[[i]]/length(TE1)#
+	E2[[i]]=E2[[i]]/length(TE2)#
+	m=min(min(E1[[i]]))#
+	print(sprintf("lowest testing err: %f",m))#
+	print(sprintf("corresponding training err: %f",E2[[i]][E1[[i]]==m]))#
+}#
+names(E1)=Names#
+names(E2)=Names
+rm(list=ls())
+setwd("../../code/GP_Gibbs/")
+open("functions.R")
+SA_vs1<-function(sDat,phi=1,rho=0.5){#
+	#rho is the probability that each variable is in the model#
+	#try to minimize q=l-log(p|s)-log(s)#
+	kmax=5e4#
+	sig=1 #initial jump sd#
+	adj0=dnorm(0,log=T)+log(rho)-log(1-rho)#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	S=rbinom(ps,1,rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	b=b*S#
+	b=b/sqrt(sum(b^2))#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s1(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		if (S[change]==0){#
+			newS=S#
+			newb=b#
+			newS[change]=1#
+			newb[change]=norm(1,0,sig)#
+			newb=newb/sqrt(sum(newb^2))#
+		}else{#
+			newS=S#
+			newS[change]=0#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))			#
+		}#
+		newbn0=newb[newb!=0]#
+		newnn0=length(newbn0)#
+		newq=phi*loss_s1(newb,sDat)+adj0*(ps-newnn0)#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			q=newq#
+			S=newS#
+			move=move+1#
+		}#
+		bn0=b[b!=0]#
+		nn0=length(bn0)#
+		newbn0=bn0+rnorm(nn0,0,sig)#
+		newb=b#
+		newb[b!=0]=newbn0#
+		newbn0=newb[newb!=0]#
+		newnn0=length(newbn0)#
+		newq=phi*loss_s1(newb,sDat)+adj0*(ps-newnn0)#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			q=newq#
+			S=newS#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%2000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/2000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*1.5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.5#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0	#
+		}#
+	}#
+	list(b=b,q=q)#
+}
 ls()
-TE1
-for (i in 1:20){}
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/triazines_s2.Rdata")
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-ls
-ls()
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/machine_s3.Rdata")
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-TE1
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/housing_s4.Rdata")
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/abalone_s5.Rdata")
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
-load("/Users/Yi/Desktop/ranking/result/05-31-2014/pyrim_s1.Rdata")
-Me=matrix(0,5,5)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE1[[i]]#
-}#
-Me=Me/20#
-Me
-Me=matrix(0,4,4)#
-for (i in 1:20){#
-	Me=Me+TE2[[i]]#
-}#
-Me=Me/20#
-Me
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=1#
+nameind=2#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -109,23 +1446,22 @@ y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 #
 m=N[nameind] #number of pairs in training data#
-tm=20000 #number of pairs in testing data#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#sieve approach#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat=normbyran(tDat,ranDat)#
-#
-Pow=1:4#
-K=0:3#
+tm=2000 #number of pairs in testing data#
+Pow=3:3#
+K=2:2#
 #
 TE1=list(NA)#
 TE2=list(NA)#
 E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
 E2=E1#
-for (ite in 1:20){#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
 	i=1#
 	for (pow in Pow){#
 		j=1#
@@ -133,10 +1469,12 @@ for (ite in 1:20){#
 			SDat=spl(norDat,pow,k,ntDat)#
 			sDat=SDat$sDat#
 			stDat=SDat$stDat#
-			result=SA_s(sDat,1)#
+			result=SA_s(sDat,2)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
 			msg1=sprintf("power: %f, nknots: %f",pow,k)#
 			print(msg1)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
@@ -153,11 +1491,10 @@ for (ite in 1:20){#
 #
 savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
 save(TE1,TE2,file=savefile)
-setwd("../..")
-setwd("./code/GP_Gibbs/")
+sDat
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=1#
+nameind=2#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -169,23 +1506,22 @@ y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 #
 m=N[nameind] #number of pairs in training data#
-tm=20 #number of pairs in testing data#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#sieve approach#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat=normbyran(tDat,ranDat)#
-#
-Pow=1:4#
-K=0:3#
+tm=2000 #number of pairs in testing data#
+Pow=3:3#
+K=2:2#
 #
 TE1=list(NA)#
 TE2=list(NA)#
 E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
 E2=E1#
-for (ite in 1:20){#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
 	i=1#
 	for (pow in Pow){#
 		j=1#
@@ -193,10 +1529,12 @@ for (ite in 1:20){#
 			SDat=spl(norDat,pow,k,ntDat)#
 			sDat=SDat$sDat#
 			stDat=SDat$stDat#
-			result=SA_s(sDat,1)#
+			result=SA_s(sDat,2)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
 			msg1=sprintf("power: %f, nknots: %f",pow,k)#
 			print(msg1)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
@@ -215,7 +1553,7 @@ savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
 save(TE1,TE2,file=savefile)
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=1#
+nameind=2#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -227,23 +1565,22 @@ y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 #
 m=N[nameind] #number of pairs in training data#
-tm=20 #number of pairs in testing data#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#sieve approach#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat=normbyran(tDat,ranDat)#
-#
-Pow=1:4#
-K=0:3#
+tm=2000 #number of pairs in testing data#
+Pow=3:3#
+K=2:2#
 #
 TE1=list(NA)#
 TE2=list(NA)#
 E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
 E2=E1#
-for (ite in 1:20){#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
 	i=1#
 	for (pow in Pow){#
 		j=1#
@@ -251,10 +1588,12 @@ for (ite in 1:20){#
 			SDat=spl(norDat,pow,k,ntDat)#
 			sDat=SDat$sDat#
 			stDat=SDat$stDat#
-			result=SA_s(sDat,1)#
+			result=SA_s(sDat,2)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
 			msg1=sprintf("power: %f, nknots: %f",pow,k)#
 			print(msg1)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
@@ -271,9 +1610,1103 @@ for (ite in 1:20){#
 #
 savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
 save(TE1,TE2,file=savefile)
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+warnings()
+phi=1,rho=0.5
+phi=1
+rho=0.5
+kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0
+kmax=5
+for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}
+newb
+length(b[b!=0])
+sum(S)
+newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)
+temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}
+for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}
+for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}
+length(b[b!=0])
+length(b)
+length(newb[b!=0])
+sum(S)
+kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+		if(length(b)!=sum(S)){break}#
+	}
+sum(S)
+kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+		if(length(b[b!=0])!=sum(S)){break}#
+	}
+length(b[b!=0])
+sum(S)
+SA_vs<-function(sDat,phi=1,rho=0.5){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[b!=0]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[b!=0]=b[b!=0]+rnorm(length(b[b!=0]),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2,rho=0.8)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	b=rmvnorm(1,rep(0,ps))#
+	S=rbinom(ps,1,rho)#
+	b=b*S#
+	b=b/sqrt(sum(b^2))*r#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	if (is.null(b0)){#
+			b=rmvnorm(1,rep(0,ps))#
+		S=rbinom(ps,1,rho)#
+		b=b*S#
+		b=b/sqrt(sum(b^2))*r#
+	}else{#
+		b=b0	#
+	}#
+#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+b0=b
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	if (is.null(b0)){#
+			b=rmvnorm(1,rep(0,ps))#
+		S=rbinom(ps,1,rho)#
+		b=b*S#
+		b=b/sqrt(sum(b^2))*r#
+	}else{#
+		b=b0#
+		S=b!=0	#
+	}#
+#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+b0=b
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+b0=b
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+b0=b
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+k
+pow
+k
+6:6
 Names=c("pyrim","triazines","machine","housing","abalone")#
 N=c(100,300,500,700,1000)#
-nameind=1#
+nameind=2#
 Name=Names[nameind]#
 datname=sprintf("%s.data",Name)#
 domname=sprintf("%s.domain",Name)#
@@ -285,23 +2718,22 @@ y=Dat[,nc]#
 Dat=Dat[,1:(nc-1)]#
 #
 m=N[nameind] #number of pairs in training data#
-tm=20 #number of pairs in testing data#
-newDat=samplepairs(m,Dat,y)#
-tDat=samplepairs(tm,Dat,y)#
-#sieve approach#
-nDat=normto1(newDat)#
-norDat=nDat$normDat#
-ranDat=nDat$ran#
-ntDat=normbyran(tDat,ranDat)#
-#
-Pow=1:4#
-K=0:3#
+tm=2000 #number of pairs in testing data#
+Pow=6:6#
+K=3:3#
 #
 TE1=list(NA)#
 TE2=list(NA)#
 E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
 E2=E1#
-for (ite in 1:20){#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
 	i=1#
 	for (pow in Pow){#
 		j=1#
@@ -309,10 +2741,12 @@ for (ite in 1:20){#
 			SDat=spl(norDat,pow,k,ntDat)#
 			sDat=SDat$sDat#
 			stDat=SDat$stDat#
-			result=SA_s(sDat,1)#
+			result=SA_s(sDat,2)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
 			msg1=sprintf("power: %f, nknots: %f",pow,k)#
 			print(msg1)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
@@ -325,8 +2759,327 @@ for (ite in 1:20){#
 	}#
 	TE1[[ite]]=E1#
 	TE2[[ite]]=E2	#
-}#
+}
+SA_s<-function(sDat,phi=1,b0=NULL){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps)#
+	Sig=diag(ps)#
+	#initialize#
+	if (is.null(b0)){#
+		b=rmvnorm(1,rep(0,ps),Sig)#
+		b=b/sqrt(sum(b^2))*r#
+	}else{#
+		b=b0#
+	}#
+	q=phi*loss_s(b,sDat)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
 #
-savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
-save(TE1,TE2,file=savefile)
-quit()
+		newb=MoveonSph(b,sig,r)#
+		newq=phi*loss_s(newb,sDat)#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			q=newq#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.9#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_s<-function(sDat,phi=1,b0=NULL){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps)#
+	Sig=diag(ps)#
+	#initialize#
+	if (is.null(b0)){#
+		b=rmvnorm(1,rep(0,ps),Sig)#
+		b=b/sqrt(sum(b^2))*r#
+	}else{#
+		b=b0#
+	}#
+	q=phi*loss_s(b,sDat)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+#
+		newb=MoveonSph(b,sig,r)#
+		newq=phi*loss_s(newb,sDat)#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			q=newq#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.5#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+Names=c("pyrim","triazines","machine","housing","abalone")#
+N=c(100,300,500,700,1000)#
+nameind=2#
+Name=Names[nameind]#
+datname=sprintf("%s.data",Name)#
+domname=sprintf("%s.domain",Name)#
+Dat=read.table(file=datname,sep=",")#
+colnames(Dat)=read.table(file=domname,sep=":")$V1#
+source("./functions.R")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=N[nameind] #number of pairs in training data#
+tm=2000 #number of pairs in testing data#
+Pow=6:6#
+K=3:3#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_vs(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
+	#try to minimize q=l-log(p)#
+	kmax=5e4#
+	sig=0.5 #initial jump sd#
+	tolc=1 #initial tol#
+	ps=ncol(sDat[[1]])#
+	r=sqrt(ps*rho)#
+	#initialize#
+	if (is.null(b0)){#
+			b=rmvnorm(1,rep(0,ps))#
+		S=rbinom(ps,1,rho)#
+		b=b*S#
+		b=b/sqrt(sum(b^2))*r#
+	}else{#
+		b=b0#
+		S=b!=0	#
+	}#
+#
+	adj0=dnorm(0)+log(rho)-log(1-rho)#
+	bn0=b[S]#
+	nn0=length(bn0)#
+	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
+	count=0#
+	#move#
+	for (k in 1:kmax){#
+		move=0#
+		change=sample(1:ps,1)#
+		newS=S#
+		newS[change]=1-S[change]#
+		if (S[change]==1){#
+			newb=b*newS#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}else{#
+			newb=b#
+			newb[change]=rnorm(1,mean=0,sd=sig)#
+			newb=newb/sqrt(sum(newb^2))*r#
+			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		newb=b#
+		newb[S]=b[S]+rnorm(sum(S),0,sig)#
+		newb=newb/sqrt(sum(newb^2))*r#
+		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(q-newq)))){#
+			b=newb#
+			S=newS#
+			q=newq#
+			move=move+1#
+		}#
+		if (move>0){#
+			count=count+1#
+		}#
+		if ((k%%1000)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/1000#
+			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+			print(msg)#
+			if (accrate>0.2){#
+				tolc=tolc*5#
+			}#
+			if (accrate<0.2){#
+				sig=sig*0.95#
+			}#
+			if (accrate==0){#
+				#break#
+			}#
+			count=0#
+		}#
+	}#
+	list(b=b,q=q)#
+}
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+result=SA_vs(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)

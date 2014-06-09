@@ -1,6 +1,6 @@
 Names=c("pyrim","triazines","machine","housing","abalone")
 N=c(100,300,500,700,1000)
-nameind=1
+nameind=2
 Name=Names[nameind]
 datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
@@ -12,23 +12,23 @@ y=Dat[,nc]
 Dat=Dat[,1:(nc-1)]
 
 m=N[nameind] #number of pairs in training data
-tm=20 #number of pairs in testing data
-newDat=samplepairs(m,Dat,y)
-tDat=samplepairs(tm,Dat,y)
-#sieve approach
-nDat=normto1(newDat)
-norDat=nDat$normDat
-ranDat=nDat$ran
-ntDat=normbyran(tDat,ranDat)
-
-Pow=1:4
-K=0:3
+tm=2000 #number of pairs in testing data
+Pow=6:6
+K=3:3
 
 TE1=list(NA)
 TE2=list(NA)
 E1=matrix(NA,nrow=length(Pow),ncol=length(K))
 E2=E1
-for (ite in 1:20){
+for (ite in 1:1){
+	newDat=samplepairs(m,Dat,y)
+	tDat=samplepairs(tm,Dat,y)
+	#sieve approach
+	nDat=normto1(newDat)
+	norDat=nDat$normDat
+	ranDat=nDat$ran
+	ntDat=normbyran(tDat,ranDat)
+	
 	i=1
 	for (pow in Pow){
 		j=1
@@ -36,10 +36,12 @@ for (ite in 1:20){
 			SDat=spl(norDat,pow,k,ntDat)
 			sDat=SDat$sDat
 			stDat=SDat$stDat
-			result=SA_s(sDat,1)
+			result=SA_vs(sDat,2,b0=b)
 			b=result$b
 			e1=loss_s(b,stDat)/tm
 			e2=loss_s(b,sDat)/m
+			msg=sprintf("it: %i", ite)
+			print(msg)
 			msg1=sprintf("power: %f, nknots: %f",pow,k)
 			print(msg1)
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)
