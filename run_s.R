@@ -13,8 +13,8 @@ Dat=Dat[,1:(nc-1)]
 
 m=N[nameind] #number of pairs in training data
 tm=2000 #number of pairs in testing data
-Pow=6:6
-K=3:3
+Pow=3:3
+K=10:10
 
 TE1=list(NA)
 TE2=list(NA)
@@ -36,7 +36,7 @@ for (ite in 1:1){
 			SDat=spl(norDat,pow,k,ntDat)
 			sDat=SDat$sDat
 			stDat=SDat$stDat
-			result=SA_vs(sDat,2,b0=b)
+			result=SA_s(sDat,2,b0=b)
 			b=result$b
 			e1=loss_s(b,stDat)/tm
 			e2=loss_s(b,sDat)/m

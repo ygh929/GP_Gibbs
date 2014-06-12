@@ -1,6 +1,6 @@
 Names=c("pyrim","triazines","machine","housing","abalone")
 N=c(100,300,500,700,1000)
-nameind=5
+nameind=1
 Name=Names[nameind]
 datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
@@ -13,21 +13,19 @@ Dat=Dat[,1:(nc-1)]
 
 
 m=N[nameind] #number of pairs in training data
-tm=2000 #number of pairs in testing data
+tm=1000 #number of pairs in testing data
 
 newDat=samplepairs(m,Dat,y)
 tDat=samplepairs(tm,Dat,y)
 
-#first norm to [-1,1]
-nDat=normto1(newDat)
-norDat=nDat$normDat
-ranDat=nDat$ran
-ntDat0=normbyran(tDat,ranDat)
+
+norDat=newDat
+ntDat0=tDat
 
 cDat=convertDat(norDat)
 #estimate fI
-Kappa=5
-Phi=3
+Kappa=4
+Phi=0.5
 E1=matrix(NA,length(Kappa),length(Phi))
 E2=E1
 E3=E1
@@ -41,7 +39,7 @@ for (kap in Kappa){
 	}
 	j=1
 	for (phi in Phi){
-		result=SA_GP(cDat,phi,fI0=fI)
+		result=SA_GP(cDat,phi)
 		fI=result$fI
 		Sig=result$Sig
 		#predict for test set and calculate error rate
@@ -62,5 +60,5 @@ for (kap in Kappa){
 	}
 	l=l+1
 }
-savefile=sprintf("%s_GP%i.Rdata",Name,nameind)
-save(E1,E2,file=savefile)
+# savefile=sprintf("%s_GP%i.Rdata",Name,nameind)
+# save(E1,E2,file=savefile)

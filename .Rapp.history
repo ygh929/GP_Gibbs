@@ -1,3 +1,272 @@
+l1(Dat,p)
+l2=function(Dat,metric,p){#
+	#expectation of loss function#
+	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
+}#
+#
+l3=function(Dat,metric,p){#
+	#original loss function#
+	rhat=which.max(p)#
+	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
+}
+l2(Dat,metric,p)
+l2=function(Dat,metric,p){#
+	#expectation of loss function#
+	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
+	return(l)#
+}#
+#
+l3=function(Dat,metric,p){#
+	#original loss function#
+	rhat=which.max(p)#
+	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
+	return(l)#
+}
+l2(Dat,metric,p)
+l3(Dat,metric,p)
+get_dens=function(Dat,metric,d=0.1){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	p1=seq(0,1,d)#
+	outDat=matrix(0,0,6)#
+	for (temp1 in p1){#
+		p2=seq(0,1-temp1,d)#
+		for (temp2 in p2){#
+			p=c(temp1,temp2,1-temp1-temp2)#
+			y1=l1(Dat,p)#
+			y2=l2(Dat,p)#
+			y3=l3(Dat,p)#
+			newdata=cbind(p,y1,y2,y3)#
+			outDat=rbind(outDat,newdata)#
+		}#
+	}#
+	#normalize outDat#
+	for (j in 4:6){#
+		outDat[,j]=outDat[,j]-max(outDat[,j])#
+		outDat[,j]=exp(outDat[,j])#
+	}#
+	return(outDat)#
+}
+getdens(Dat,metric)
+get_dens(Dat,metric)
+get_dens=function(Dat,metric,d=0.1){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	p1=seq(0,1,d)#
+	outDat=matrix(0,0,6)#
+	for (temp1 in p1){#
+		p2=seq(0,1-temp1,d)#
+		for (temp2 in p2){#
+			p=c(temp1,temp2,1-temp1-temp2)#
+			y1=l1(Dat,p)#
+			y2=l2(Dat,metric,p)#
+			y3=l3(Dat,metric,p)#
+			newdata=cbind(p,y1,y2,y3)#
+			outDat=rbind(outDat,newdata)#
+		}#
+	}#
+	#normalize outDat#
+	for (j in 4:6){#
+		outDat[,j]=outDat[,j]-max(outDat[,j])#
+		outDat[,j]=exp(outDat[,j])#
+	}#
+	return(outDat)#
+}
+get_dens(Dat,metric)
+p
+get_dens=function(Dat,metric,d=0.1){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	p1=seq(0,1,d)#
+	outDat=matrix(0,0,6)#
+	for (temp1 in p1){#
+		p2=seq(0,1-temp1,d)#
+		for (temp2 in p2){#
+			p=c(temp1,temp2,1-temp1-temp2)#
+			print(p)#
+			y1=l1(Dat,p)#
+			y2=l2(Dat,metric,p)#
+			y3=l3(Dat,metric,p)#
+			newdata=cbind(p,y1,y2,y3)#
+			outDat=rbind(outDat,newdata)#
+		}#
+	}#
+	#normalize outDat#
+	for (j in 4:6){#
+		outDat[,j]=outDat[,j]-max(outDat[,j])#
+		outDat[,j]=exp(outDat[,j])#
+	}#
+	return(outDat)#
+}
+p
+get_dens(Dat,metric)
+p=c(0,0,1)
+l1(Dat,p)
+Dat
+l2(Dat,metric,p)
+l3(Dat,metric,p)
+get_dens=function(Dat,metric,d=0.1){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	p1=seq(0,1,d)#
+	outDat=matrix(0,0,6)#
+	for (temp1 in p1){#
+		p2=seq(0,1-temp1,d)#
+		for (temp2 in p2){#
+			p=c(temp1,temp2,1-temp1-temp2)#
+			y1=l1(Dat,p)#
+			y2=l2(Dat,metric,p)#
+			y3=l3(Dat,metric,p)#
+			newdata=cbind(matrix(p,1,3),y1,y2,y3)#
+			outDat=rbind(outDat,newdata)#
+		}#
+	}#
+	#normalize outDat#
+	for (j in 4:6){#
+		outDat[,j]=outDat[,j]-max(outDat[,j])#
+		outDat[,j]=exp(outDat[,j])#
+	}#
+	return(outDat)#
+}
+get_dens(Dat,metric)
+??mixexp
+??mixtureplot
+require(mixexp)
+figure()
+plot()
+par
+par()
+Quartz()
+??plot
+device()
+x11()
+x11(2)
+dev.new
+dev.new()
+dev(2)
+??dev
+Devices
+Devices()
+Devices(1)
+dev.new()
+??mixture
+Result=get_dens(Dat,metric)#
+#
+for (i=1:3){#
+	dev.new()#
+	MixturPlot(Result[,1],Result[,2],Result[,3],Result[,3+i])#
+}
+require(mixexp)
+for (i=1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i])#
+}
+MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)
+for (i=1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)#
+}
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)#
+}
+?MixturePlot
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1",title=print(i) )#
+}
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
+}
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
+}
+get_dens=function(Dat,metric,d=0.01){#
+	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
+	#metric is a function of the form f(x,y), which measures the distance between x and y#
+	#d is the distance between points in the output#
+	#there're 6 columns of outdata first 3 are p1,p2,p3#
+	#last 3 are corresponding 'likelihood'#
+	p1=seq(0,1,d)#
+	outDat=matrix(0,0,6)#
+	for (temp1 in p1){#
+		p2=seq(0,1-temp1,d)#
+		for (temp2 in p2){#
+			p=c(temp1,temp2,1-temp1-temp2)#
+			y1=l1(Dat,p)#
+			y2=l2(Dat,metric,p)#
+			y3=l3(Dat,metric,p)#
+			newdata=cbind(matrix(p,1,3),y1,y2,y3)#
+			outDat=rbind(outDat,newdata)#
+		}#
+	}#
+	#normalize outDat#
+	for (j in 4:6){#
+		outDat[,j]=outDat[,j]-max(outDat[,j])#
+		outDat[,j]=exp(outDat[,j])#
+	}#
+	return(outDat)#
+}#
+#
+Result=get_dens(Dat,metric)#
+#
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
+}
+min(Result)
+for (i in 1:3){#
+	dev.new()#
+	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=2,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
+}
+?MixturePlot
+install.packages("klaR")
+??klaR
+a1 <- a2 <- a3 <- 2 #
+#a2 <- .5 #
+#a3 <- .5 #
+#
+x1 <- x2 <- seq(0.01, .99, by=.01)#
+#
+f <- function(x1, x2){#
+#
+       term1 <- gamma(a1+a2+a3)/(gamma(a1)*gamma(a2)*gamma(a3))#
+       term2 <- x1^(a1-1)*x2^(a2-1)*(1-x1-x2)^(a3-1)#
+       term3 <- (x1 + x2 < 1)#
+       term1*term2*term3#
+       }#
+#
+z <- outer(x1, x2, f) #
+z[z<=0] <- NA#
+#
+persp(x1, x2, z,#
+#
+       main = "Dirichlet Distribution",#
+       col = "lightblue",#
+       theta = 50,#
+       phi = 20,#
+       r = 50,#
+       d = 0.1,#
+       expand = 0.5,#
+       ltheta = 90,#
+       lphi = 180,#
+       shade = 0.75,#
+       ticktype = "detailed",#
+       nticks = 5)
 simplex.y  <- function(x) {#
   return( sqrt(0.75) *  x[3] / sum(x) )#
 } #
@@ -1318,15 +1587,67 @@ n=512*vc/(eps^2)*log(256*vc/(eps^2))#
 n^vc#
 exp((n*eps^2)/256)
 1-pnorm(1.776)
-dnorm(0)
 setwd("./Desktop/ranking/code/GP_Gibbs/")
-open()
-library(mtvnorm)
-library(mvnorm)
-source("./functions.R")
-rmvnorm(1,rep(0,5))
-rm(list=ls())
-setwd("../../result/06-06-2014/")
+Names=c("pyrim","triazines","machine","housing","abalone")#
+N=c(100,300,500,700,1000)#
+nameind=2#
+Name=Names[nameind]#
+datname=sprintf("%s.data",Name)#
+domname=sprintf("%s.domain",Name)#
+Dat=read.table(file=datname,sep=",")#
+colnames(Dat)=read.table(file=domname,sep=":")$V1#
+source("./functions.R")#
+nc=ncol(Dat)#
+y=Dat[,nc]#
+Dat=Dat[,1:(nc-1)]#
+#
+m=N[nameind] #number of pairs in training data#
+tm=2000 #number of pairs in testing data#
+Pow=10:10#
+K=5:5#
+#
+TE1=list(NA)#
+TE2=list(NA)#
+E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
+E2=E1#
+for (ite in 1:1){#
+	newDat=samplepairs(m,Dat,y)#
+	tDat=samplepairs(tm,Dat,y)#
+	#sieve approach#
+	nDat=normto1(newDat)#
+	norDat=nDat$normDat#
+	ranDat=nDat$ran#
+	ntDat=normbyran(tDat,ranDat)#
+	i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2	#
+}#
+#
+savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
+save(TE1,TE2,file=savefile)
+setwd("./../../result/06-06-2014/")
 Names=c("pyrim","triazines","machine","housing","abalone")#
 Err=list#
 E1=list()#
@@ -1343,127 +1664,91 @@ for (i in 1:5){#
 	E1[[i]]=E1[[i]]/length(TE1)#
 	E2[[i]]=E2[[i]]/length(TE2)#
 	m=min(min(E1[[i]]))#
+	location=which.min(E1[[i]])#
+	location=c(location%/%5+1,location%%5)#
 	print(sprintf("lowest testing err: %f",m))#
 	print(sprintf("corresponding training err: %f",E2[[i]][E1[[i]]==m]))#
+	print(location)#
 }#
 names(E1)=Names#
 names(E2)=Names
-rm(list=ls())
 setwd("../../code/GP_Gibbs/")
-open("functions.R")
-SA_vs1<-function(sDat,phi=1,rho=0.5){#
-	#rho is the probability that each variable is in the model#
-	#try to minimize q=l-log(p|s)-log(s)#
-	kmax=5e4#
-	sig=1 #initial jump sd#
-	adj0=dnorm(0,log=T)+log(rho)-log(1-rho)#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	S=rbinom(ps,1,rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	b=b*S#
-	b=b/sqrt(sum(b^2))#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s1(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		if (S[change]==0){#
-			newS=S#
-			newb=b#
-			newS[change]=1#
-			newb[change]=norm(1,0,sig)#
-			newb=newb/sqrt(sum(newb^2))#
-		}else{#
-			newS=S#
-			newS[change]=0#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))			#
-		}#
-		newbn0=newb[newb!=0]#
-		newnn0=length(newbn0)#
-		newq=phi*loss_s1(newb,sDat)+adj0*(ps-newnn0)#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			q=newq#
-			S=newS#
-			move=move+1#
-		}#
-		bn0=b[b!=0]#
-		nn0=length(bn0)#
-		newbn0=bn0+rnorm(nn0,0,sig)#
-		newb=b#
-		newb[b!=0]=newbn0#
-		newbn0=newb[newb!=0]#
-		newnn0=length(newbn0)#
-		newq=phi*loss_s1(newb,sDat)+adj0*(ps-newnn0)#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			q=newq#
-			S=newS#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%2000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/2000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
 			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*1.5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.5#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0	#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-ls()
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-#
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
-Pow=3:3#
-K=2:2#
-#
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
-	i=1#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+loss_s(b,sDat)
+m
+m=300
+58/300
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+Pow=3:3:#
+K=5:5
+i=1#
 	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[ite]]=E1#
+	TE2[[ite]]=E2
+k
+i=1#
+	for (pow in Pow){#
+		j=1#
+		for (k in K){#
+			SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1#
+		}#
+		i=i+1#
+	}
+for (pow in Pow){#
 		j=1#
 		for (k in K){#
 			SDat=spl(norDat,pow,k,ntDat)#
@@ -1484,1213 +1769,20 @@ for (ite in 1:1){#
 			j=j+1#
 		}#
 		i=i+1#
-	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
-}#
-#
-savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
-save(TE1,TE2,file=savefile)
-sDat
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-#
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
+	}
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
 Pow=3:3#
-K=2:2#
-#
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
-	i=1#
-	for (pow in Pow){#
-		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)#
-			E1[i,j]=e1#
-			E2[i,j]=e2#
-			j=j+1#
-		}#
-		i=i+1#
-	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
-}#
-#
-savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
-save(TE1,TE2,file=savefile)
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-#
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
-Pow=3:3#
-K=2:2#
-#
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
-	i=1#
-	for (pow in Pow){#
-		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)#
-			E1[i,j]=e1#
-			E2[i,j]=e2#
-			j=j+1#
-		}#
-		i=i+1#
-	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
-}#
-#
-savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
-save(TE1,TE2,file=savefile)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-warnings()
-phi=1,rho=0.5
-phi=1
-rho=0.5
-kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0
-kmax=5
-for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}
-newb
-length(b[b!=0])
-sum(S)
-newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)
-temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}
-for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}
-for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}
-length(b[b!=0])
-length(b)
-length(newb[b!=0])
-sum(S)
-kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-		if(length(b)!=sum(S)){break}#
-	}
-sum(S)
-kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-		if(length(b[b!=0])!=sum(S)){break}#
-	}
-length(b[b!=0])
-sum(S)
-SA_vs<-function(sDat,phi=1,rho=0.5){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[b!=0]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[b!=0]=b[b!=0]+rnorm(length(b[b!=0]),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2,rho=0.8)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
+K=10:10
 result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	b=rmvnorm(1,rep(0,ps))#
-	S=rbinom(ps,1,rho)#
-	b=b*S#
-	b=b/sqrt(sum(b^2))*r#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	if (is.null(b0)){#
-			b=rmvnorm(1,rep(0,ps))#
-		S=rbinom(ps,1,rho)#
-		b=b*S#
-		b=b/sqrt(sum(b^2))*r#
-	}else{#
-		b=b0	#
-	}#
-#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-b0=b
-result=SA_vs(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	if (is.null(b0)){#
-			b=rmvnorm(1,rep(0,ps))#
-		S=rbinom(ps,1,rho)#
-		b=b*S#
-		b=b/sqrt(sum(b^2))*r#
-	}else{#
-		b=b0#
-		S=b!=0	#
-	}#
-#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-result=SA_vs(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-b0=b
-result=SA_vs(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-b0=b
-result=SA_vs(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-b0=b
-result=SA_vs(sDat,2,b0=b)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#
@@ -2701,44 +1793,52 @@ result=SA_vs(sDat,2,b0=b)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
 			print(msg2)
 k
+k=10
 pow
+pow=3
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2#
+			j=j+1
+result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
 k
-6:6
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-#
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
-Pow=6:6#
-K=3:3#
-#
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
-	i=1#
-	for (pow in Pow){#
-		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
+k=15
+pow
+SDat=spl(norDat,pow,k,ntDat)#
+			sDat=SDat$sDat#
+			stDat=SDat$stDat#
+			result=SA_s(sDat,2,b0=b)#
+			b=result$b#
+			e1=loss_s(b,stDat)/tm#
+			e2=loss_s(b,sDat)/m#
+			msg=sprintf("it: %i", ite)#
+			print(msg)#
+			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			print(msg2)
+SDat=spl(norDat,pow,k,ntDat)#
 			sDat=SDat$sDat#
 			stDat=SDat$stDat#
 			result=SA_s(sDat,2)#
@@ -2750,330 +1850,8 @@ for (ite in 1:1){#
 			msg1=sprintf("power: %f, nknots: %f",pow,k)#
 			print(msg1)#
 			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)#
-			E1[i,j]=e1#
-			E2[i,j]=e2#
-			j=j+1#
-		}#
-		i=i+1#
-	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
-}
-SA_s<-function(sDat,phi=1,b0=NULL){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps)#
-	Sig=diag(ps)#
-	#initialize#
-	if (is.null(b0)){#
-		b=rmvnorm(1,rep(0,ps),Sig)#
-		b=b/sqrt(sum(b^2))*r#
-	}else{#
-		b=b0#
-	}#
-	q=phi*loss_s(b,sDat)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-#
-		newb=MoveonSph(b,sig,r)#
-		newq=phi*loss_s(newb,sDat)#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			q=newq#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.9#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
 			print(msg2)
 result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_s<-function(sDat,phi=1,b0=NULL){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps)#
-	Sig=diag(ps)#
-	#initialize#
-	if (is.null(b0)){#
-		b=rmvnorm(1,rep(0,ps),Sig)#
-		b=b/sqrt(sum(b^2))*r#
-	}else{#
-		b=b0#
-	}#
-	q=phi*loss_s(b,sDat)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-#
-		newb=MoveonSph(b,sig,r)#
-		newq=phi*loss_s(newb,sDat)#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			q=newq#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.5#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
-#
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
-Pow=6:6#
-K=3:3#
-#
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
-	i=1#
-	for (pow in Pow){#
-		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)#
-			E1[i,j]=e1#
-			E2[i,j]=e2#
-			j=j+1#
-		}#
-		i=i+1#
-	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
-}
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_vs(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){#
-	#try to minimize q=l-log(p)#
-	kmax=5e4#
-	sig=0.5 #initial jump sd#
-	tolc=1 #initial tol#
-	ps=ncol(sDat[[1]])#
-	r=sqrt(ps*rho)#
-	#initialize#
-	if (is.null(b0)){#
-			b=rmvnorm(1,rep(0,ps))#
-		S=rbinom(ps,1,rho)#
-		b=b*S#
-		b=b/sqrt(sum(b^2))*r#
-	}else{#
-		b=b0#
-		S=b!=0	#
-	}#
-#
-	adj0=dnorm(0)+log(rho)-log(1-rho)#
-	bn0=b[S]#
-	nn0=length(bn0)#
-	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)#
-	count=0#
-	#move#
-	for (k in 1:kmax){#
-		move=0#
-		change=sample(1:ps,1)#
-		newS=S#
-		newS[change]=1-S[change]#
-		if (S[change]==1){#
-			newb=b*newS#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}else{#
-			newb=b#
-			newb[change]=rnorm(1,mean=0,sd=sig)#
-			newb=newb/sqrt(sum(newb^2))*r#
-			newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		}#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		newb=b#
-		newb[S]=b[S]+rnorm(sum(S),0,sig)#
-		newb=newb/sqrt(sum(newb^2))*r#
-		newq=phi*loss_s(newb,sDat)+adj0*(ps-sum(newS))#
-		temp=runif(1,0,1)#
-		if (temp<(exp(tolc*(q-newq)))){#
-			b=newb#
-			S=newS#
-			q=newq#
-			move=move+1#
-		}#
-		if (move>0){#
-			count=count+1#
-		}#
-		if ((k%%1000)==0){#
-			#adjust tol and sig by accept rate#
-			accrate=count/1000#
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))#
-			print(msg)#
-			if (accrate>0.2){#
-				tolc=tolc*5#
-			}#
-			if (accrate<0.2){#
-				sig=sig*0.95#
-			}#
-			if (accrate==0){#
-				#break#
-			}#
-			count=0#
-		}#
-	}#
-	list(b=b,q=q)#
-}
-result=SA_vs(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_vs(sDat,2,b0=b)#
 			b=result$b#
 			e1=loss_s(b,stDat)/tm#
 			e2=loss_s(b,sDat)/m#

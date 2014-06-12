@@ -1,6 +1,6 @@
 Names=c("pyrim","triazines","machine","housing","abalone")
 N=c(100,300,500,700,1000)
-nameind=5
+nameind=1
 Name=Names[nameind]
 datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
@@ -13,7 +13,7 @@ Dat=Dat[,1:(nc-1)]
 
 
 m=N[nameind] #number of pairs in training data
-tm=2000 #number of pairs in testing data
+tm=1000 #number of pairs in testing data
 
 newDat=samplepairs(m,Dat,y)
 tDat=samplepairs(tm,Dat,y)
@@ -24,8 +24,8 @@ ntDat0=tDat
 
 cDat=convertDat(norDat)
 #estimate fI
-Kappa=1:20
-Phi=(11:20)*0.2
+Kappa=2
+Phi=3
 E1=matrix(NA,length(Kappa),length(Phi))
 E2=E1
 E3=E1
@@ -39,27 +39,26 @@ for (kap in Kappa){
 	}
 	j=1
 	for (phi in Phi){
-		result=SA_GP(cDat,phi)
+		result=SA_GP(cDat,phi,fI0=fI)
 		fI=result$fI
 		Sig=result$Sig
 		#predict for test set and calculate error rate
 		x=cDat$points
-		e1=geterr_GP(ntDat0,x,Sig,fI)
-		e2=geterr_GP(norDat,x,Sig,fI)
-		e3=loss_GP(fI,cDat$pairs)/m
+		ctDat=convertDat(ntDat0)
+		pre=pre_GP(getcov(ctDat$points,x,kernel1),Sig,fI)
+		e1=loss_GP(pre,ctDat$pairs)/tm
+		e2=loss_GP(fI,cDat$pairs)/m
 		
 		msg1=sprintf("kappa: %f, phi: %f",kap,phi)
 		print(msg1)
-		msg2=sprintf("testing err: %f, training err: %f, loss at fI: %f",e1,e2,e3)
+		msg2=sprintf("testing err: %f, training err: %f",e1,e2)
 		print(msg2)
 		
 		E1[l,j]=e1
 		E2[l,j]=e2
-		E3[l,j]=e3
 		j=j+1
 	}
 	l=l+1
 }
-
-savefile=sprintf("%s_GP%i.Rdata",Name,nameind)
-save(E1,E2,E3,file=savefile)
+# savefile=sprintf("%s_GP%i.Rdata",Name,nameind)
+# save(E1,E2,file=savefile)

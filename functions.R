@@ -90,24 +90,29 @@ loss_GP=function(fI,pairs){
 	loss
 }
 	
-SA_GP<-function(cDat,phi=0.5){
+SA_GP<-function(cDat,phi=0.5,fI0=NULL){
+	
 	#try to minimize q=l-log(p)
-	kmax=5e4
-	sig=0.5 #initial jump sd
+	kmax=1e5
+	sig=0.1 #initial jump sd
 	tolc=1 #initial tol
 	x=cDat$points
 	pairs=cDat$pairs
 	Sig=getSigma(x,kernel1)
 	n=nrow(x)
-	r=sqrt(n)
+	r=2
 	#initialize
-	fI=rmvnorm(1,rep(0,n),Sig)
-	fI=fI/sqrt(sum(fI^2))*r
+	if (is.null(fI0)){
+		fI=rmvnorm(1,rep(0,n),Sig)
+		fI=fI/sqrt(sum(fI^2))*r
+	}else{
+		fI=fI0
+	}
 	q=phi*loss_GP(fI,pairs)-dmvnorm(fI,mean=rep(0,n),sigma=Sig,log=TRUE)
 	count=0
 	#move
 	for (k in 1:kmax){
-
+		
 		newfI=MoveonSph(fI,sig,r)
 		newq=phi*loss_GP(newfI,pairs)-dmvnorm(newfI,mean=rep(0,n),sigma=Sig,log=TRUE)
 	
@@ -118,16 +123,19 @@ SA_GP<-function(cDat,phi=0.5){
 			count=count+1
 		}
 		if ((k%%1000)==0){
+			
+			
 			#adjust tol and sig by accept rate
 			accrate=count/1000
-			if (accrate>0.2){
+			print(list(k,accrate))
+			if (accrate>0.1){
 				tolc=tolc*5
 			}
-			if (accrate<0.2){
-				sig=sig*0.75
+			if (accrate<0.1){
+				sig=sig*0.8
 			}
 			if (accrate==0){
-				break
+				#break
 			}
 			count=0
 		}
@@ -139,9 +147,10 @@ SA_GP<-function(cDat,phi=0.5){
 getcov<-function(xt,x,ker){
 	#x is all the observed n (we use 2m here) locations and xt is the new pair
 	n=nrow(x)
-	Sigma=matrix(1,n,2)
+	nt=nrow(xt)
+	Sigma=matrix(1,n,nt)
 	for (i in 1:n){
-		for (j in 1:2){
+		for (j in 1:nt){
 			Sigma[i,j]=ker(x[i,],xt[j,])
 		}
 	}
@@ -151,7 +160,7 @@ getcov<-function(xt,x,ker){
 
 pre_GP<-function(coSig,Sig,f){
 	
-	Y=t(coSig)%*%Sig%*%matrix(f,ncol=1)
+	Y=t(coSig)%*%solve(Sig)%*%matrix(f,ncol=1)
 	Y
 }
 

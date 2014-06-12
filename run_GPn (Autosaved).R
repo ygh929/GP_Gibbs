@@ -41,7 +41,7 @@ for (kap in Kappa){
 	}
 	j=1
 	for (phi in Phi){
-		result=SA_GP(cDat,phi,fI0=fI)
+		result=SA_GP(cDat,phi)
 		fI=result$fI
 		Sig=result$Sig
 		#predict for test set and calculate error rate
