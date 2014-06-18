@@ -38,7 +38,7 @@ samplepairs<-function(m,Dat,y){
 	newDat
 }
 
-kernel1<-function(x1,x2,kappa=1){
+kernel1<-function(x1,x2,kappa=2){
 	#kernal function to generate Sigma
 	k=sum((x1-x2)^2)
 	K=exp(-kappa*k/2)
@@ -93,14 +93,14 @@ loss_GP=function(fI,pairs){
 SA_GP<-function(cDat,phi=0.5,fI0=NULL){
 	
 	#try to minimize q=l-log(p)
-	kmax=1e5
+	kmax=1e2
 	sig=0.1 #initial jump sd
 	tolc=1 #initial tol
 	x=cDat$points
 	pairs=cDat$pairs
 	Sig=getSigma(x,kernel1)
 	n=nrow(x)
-	r=2
+	r=5
 	#initialize
 	if (is.null(fI0)){
 		fI=rmvnorm(1,rep(0,n),Sig)
@@ -127,7 +127,7 @@ SA_GP<-function(cDat,phi=0.5,fI0=NULL){
 			
 			#adjust tol and sig by accept rate
 			accrate=count/1000
-			print(list(k,accrate))
+			#print(list(k,accrate))
 			if (accrate>0.1){
 				tolc=tolc*5
 			}
@@ -142,6 +142,85 @@ SA_GP<-function(cDat,phi=0.5,fI0=NULL){
 	}
 	list(fI=fI,Sig=Sig,q=q)
 }
+
+lp_kappa<-function(kappa){
+	d=(-2-1)*log(kappa)-2/kappa
+	d	
+}
+
+gen_ker<-function(kappa=1){
+	kernel1<-function(x1,x2){
+		#kernal function to generate Sigma
+		k=sum((x1-x2)^2)
+		K=exp(-kappa*k/2)
+		K
+	}
+	kernel1
+}
+
+SA_GP_k<-function(cDat,phi=1,fI0=NULL){
+	#try to minimize q=l-log(p)
+	kmax=1e5
+	sig=list(b=0.1,kappa=0.1) #initial jump sd
+	tolc=1 #initial tol
+	x=cDat$points
+	pairs=cDat$pairs
+	Sig=getSigma(x,kernel1)
+	n=nrow(x)
+	r=5
+	#initialize
+	kappa=1
+	if (is.null(fI0)){
+		fI=rmvnorm(1,rep(0,n),Sig)
+		fI=fI/sqrt(sum(fI^2))*r
+	}else{
+		fI=fI0
+	}
+	q=phi*loss_GP(fI,pairs)-dmvnorm(fI,sigma=Sig,log=TRUE)-lp_kappa(kappa)
+	count=list(b=0,kappa=0)
+	#move
+	for (k in 1:kmax){
+		newfI=MoveonSph(fI,sig$b,r)
+		newq=phi*loss_GP(newfI,pairs)-dmvnorm(newfI,sigma=Sig,log=TRUE)-lp_kappa(kappa)
+	
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			fI=newfI
+			q=newq
+			count$b=count$b+1
+		}
+		
+		newkappa=abs(kappa+rnorm(1,0,sd=sig$kappa))
+		newkernel=gen_ker(newkappa)
+		newSig=getSigma(x,newkernel)
+		newq=phi*loss_GP(fI,pairs)-dmvnorm(fI,sigma=newSig,log=TRUE)-lp_kappa(newkappa)
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			kappa=newkappa
+			Sig=newSig
+			q=newq
+			count$kappa=count$kappa+1
+		}
+		if ((k%%1000)==0){
+			
+			
+			#adjust tol and sig by accept rate
+			accrate=list(b=count$b/1000,kappa=count$kappa/1000)
+			print(list(k,accrate))
+			for (i in 1:2){
+				if (accrate[[i]]>0.1){
+					tolc=tolc*2
+				}
+				if (accrate[[i]]<0.1){
+					sig[[i]]=sig[[i]]*0.8
+				}
+				count[[i]]=0				
+			}
+		}
+	}
+	list(fI=fI,Sig=Sig,q=q,kappa=kappa)
+}
+
 
 
 getcov<-function(xt,x,ker){
@@ -209,7 +288,7 @@ normbyran<-function(x,ran){
 	x$X2=Tdat[(nr+1):(2*nr),]-1
 	x
 }
-spl<-function(Dat,c,k,tDat=NULL){
+spl<-function(Dat,c,k,inter=FALSE,tDat=NULL){
 	#function to get cubic splines with k knots in each dimension
 	x=rbind(Dat$X1,Dat$X2)
 	m=nrow(Dat$X1)
@@ -224,8 +303,8 @@ spl<-function(Dat,c,k,tDat=NULL){
 	for (j in 1:ncol(x)){
 		tempx=x[,j]
 		if (length(unique(tempx))<=2){
-			names(tempx)=colnames(x)[j]
 			newx=cbind(newx,tempx)
+			colnames(newx)[ncol(newx)]=colnames(x)[j]
 		}else{
 			if (k>0){
 				xi=min(tempx)+(range(tempx)[2]-range(tempx)[1])*(1:k)/(k+1)
@@ -242,8 +321,23 @@ spl<-function(Dat,c,k,tDat=NULL){
 				newx=cbind(newx,addx)	
 				}
 		}
+		if (inter==TRUE && j!=ncol(x)){
+			addx1=matrix(NA,nrow(x),0)
+			for (l in (j+1):ncol(x)){
+				tempadd=x[,j]*x[,l]
+				if (length(unique(tempadd))>=2){
+					addx1=cbind(addx1,tempadd)
+					colnames(addx1)[ncol(addx1)]=sprintf("%s.%s",colnames(x)[j],colnames(x)[l])
+					#colnames(addx1)=sprintf("%s.%s",colnames(x[,j]),colnames(x[,l]))
+				}
+				
+			}
+			newx=cbind(newx,addx1)
+			
+		}
 	}
 	rownames(newx)=rownames(x)
+	
 	sDat=list(X1=NULL,X2=NULL)
 	sDat$X1=newx[1:m,]
 	sDat$X2=newx[(m+1):(2*m),]
@@ -257,6 +351,7 @@ spl<-function(Dat,c,k,tDat=NULL){
 	output
 }
 
+
 loss_s=function(b,sDat){
 	Y=matrix(NA,nrow=nrow(sDat[[1]]),ncol=2)
 	for (i in 1:2){
@@ -268,7 +363,7 @@ loss_s=function(b,sDat){
 	
 SA_s<-function(sDat,phi=1,b0=NULL){
 	#try to minimize q=l-log(p)
-	kmax=5e4
+	kmax=1e5
 	sig=0.5 #initial jump sd
 	tolc=1 #initial tol
 	ps=ncol(sDat[[1]])
@@ -299,8 +394,6 @@ SA_s<-function(sDat,phi=1,b0=NULL){
 			
 			#adjust tol and sig by accept rate
 			accrate=count/1000
-			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))
-			print(msg)
 			if (accrate>0.2){
 				tolc=tolc*5
 			}
@@ -378,20 +471,20 @@ SA_s1<-function(sDat,phi=1){
 
 SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
 	#try to minimize q=l-log(p)
-	kmax=5e4
+	kmax=1e5
 	sig=0.5 #initial jump sd
 	tolc=1 #initial tol
 	ps=ncol(sDat[[1]])
 	r=sqrt(ps*rho)
 	#initialize
 	if (is.null(b0)){
-			b=rmvnorm(1,rep(0,ps))
+		b=rmvnorm(1,rep(0,ps))
 		S=rbinom(ps,1,rho)
 		b=b*S
 		b=b/sqrt(sum(b^2))*r
 	}else{
 		b=b0
-		S=b!=0	
+		S=(b!=0)	
 	}
 
 	adj0=dnorm(0)+log(rho)-log(1-rho)
@@ -400,7 +493,7 @@ SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
 	q=phi*loss_s(b,sDat)+adj0*(ps-nn0)
 	count=0
 	#move
-	for (k in 1:kmax){
+	for (k in 1:kmax){	
 		move=0
 		change=sample(1:ps,1)
 		newS=S
@@ -421,7 +514,7 @@ SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
 			S=newS
 			q=newq
 			move=move+1
-		}
+		}	
 		newb=b
 		newb[S]=b[S]+rnorm(sum(S),0,sig)
 		newb=newb/sqrt(sum(newb^2))*r
@@ -429,15 +522,14 @@ SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
 		temp=runif(1,0,1)
 		if (temp<(exp(tolc*(q-newq)))){
 			b=newb
-			S=newS
 			q=newq
 			move=move+1
 		}
 		if (move>0){
 			count=count+1
-		}
+		}	
 		if ((k%%1000)==0){
-			
+
 			#adjust tol and sig by accept rate
 			accrate=count/1000
 			msg=sprintf("k=%i, accrate=%f, current err=%i",k,accrate,loss_s(b,sDat))
@@ -456,4 +548,29 @@ SA_vs<-function(sDat,phi=1,rho=0.5,b0=NULL){
 		}
 	}
 	list(b=b,q=q)
+}
+
+gendata<-function(n,p,type=1,errsd=0){
+	b=rnorm(p)
+	X=matrix(runif(n*p)*10,n,p)
+	y1<-function(x){
+		x%*%b
+	}
+	y2<-function(x){
+		x^4%*%b
+	}
+	y3<-function(x){
+		exp(x)%*%b
+	}
+	y4<-function(x){
+		(x%*%b)^2
+	}
+	y5<-function(x){
+		t(rmvnorm(1,sigma=getSigma(x,kernel1)))
+	}
+	y=list(y1,y2,y3,y4,y5)
+	Y=y[[type]](X)+rnorm(n,0,errsd)
+	Dat=cbind(X,Y)
+	colnames(Dat)=1:ncol(Dat)
+	list(Dat=Dat,b=b)
 }

@@ -1,6 +1,6 @@
 Names=c("pyrim","triazines","machine","housing","abalone")
 N=c(100,300,500,700,1000)
-nameind=5
+nameind=1
 Name=Names[nameind]
 datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
@@ -26,8 +26,8 @@ ntDat0=normbyran(tDat,ranDat)
 
 cDat=convertDat(norDat)
 #estimate fI
-Kappa=5
-Phi=3
+Kappa=10
+Phi=2
 E1=matrix(NA,length(Kappa),length(Phi))
 E2=E1
 E3=E1
@@ -41,7 +41,7 @@ for (kap in Kappa){
 	}
 	j=1
 	for (phi in Phi){
-		result=SA_GP(cDat,phi,fI0=fI)
+		result=SA_GP(cDat,phi)
 		fI=result$fI
 		Sig=result$Sig
 		#predict for test set and calculate error rate

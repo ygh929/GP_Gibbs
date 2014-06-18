@@ -6,6 +6,7 @@ datname=sprintf("%s.data",Name)
 domname=sprintf("%s.domain",Name)
 Dat=read.table(file=datname,sep=",")
 colnames(Dat)=read.table(file=domname,sep=":")$V1
+
 source("./functions.R")
 nc=ncol(Dat)
 y=Dat[,nc]
@@ -14,7 +15,7 @@ Dat=Dat[,1:(nc-1)]
 m=N[nameind] #number of pairs in training data
 tm=2000 #number of pairs in testing data
 Pow=3:3
-K=3:3
+K=2:2
 
 TE1=list(NA)
 TE2=list(NA)
@@ -36,7 +37,7 @@ for (ite in 1:1){
 			SDat=spl(norDat,pow,k,inter=F,tDat=ntDat)
 			sDat=SDat$sDat
 			stDat=SDat$stDat
-			result=SA_s(sDat,phi=2)
+			result=SA_vs(sDat,phi=2,rho=0.4)
 			b=result$b
 			e1=loss_s(b,stDat)/tm
 			e2=loss_s(b,sDat)/m
