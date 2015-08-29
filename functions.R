@@ -38,7 +38,7 @@ samplepairs<-function(m,Dat,y){
 	newDat
 }
 
-kernel1<-function(x1,x2,kappa=2){
+kernel1<-function(x1,x2,kappa=10){
 	#kernal function to generate Sigma
 	k=sum((x1-x2)^2)
 	K=exp(-kappa*k/2)
@@ -90,10 +90,9 @@ loss_GP=function(fI,pairs){
 	loss
 }
 	
-SA_GP<-function(cDat,phi=0.5,fI0=NULL){
+SA_GP<-function(cDat,phi=0.5,fI0=NULL,kmax=5e4){
 	
 	#try to minimize q=l-log(p)
-	kmax=1e2
 	sig=0.1 #initial jump sd
 	tolc=1 #initial tol
 	x=cDat$points
@@ -127,7 +126,6 @@ SA_GP<-function(cDat,phi=0.5,fI0=NULL){
 			
 			#adjust tol and sig by accept rate
 			accrate=count/1000
-			#print(list(k,accrate))
 			if (accrate>0.1){
 				tolc=tolc*5
 			}
@@ -206,7 +204,6 @@ SA_GP_k<-function(cDat,phi=1,fI0=NULL){
 			
 			#adjust tol and sig by accept rate
 			accrate=list(b=count$b/1000,kappa=count$kappa/1000)
-			print(list(k,accrate))
 			for (i in 1:2){
 				if (accrate[[i]]>0.1){
 					tolc=tolc*2
@@ -573,4 +570,164 @@ gendata<-function(n,p,type=1,errsd=0){
 	Dat=cbind(X,Y)
 	colnames(Dat)=1:ncol(Dat)
 	list(Dat=Dat,b=b)
+}
+GetXZ<-function(cDat){
+	points=cDat$points
+	pairs=cDat$pairs
+	m=dim(pairs)[1]
+	n=dim(points)[1]
+	X=matrix(0,nrow=m,ncol=n)
+	Z=matrix(NA,nrow=m,ncol=1)
+	for (i in 1:m){
+		X[i,min(pairs[i,])]=1
+		X[i,max(pairs[i,])]=-1
+		Z[i,1]=2*I(pairs[i,1]<pairs[i,2])-1
+	}
+	list(X=X,Z=Z)
+}
+
+PartialCov<-function(X0,X1,ker){
+	m=nrow(X0)
+	n=nrow(X1)
+	ParCov=matrix(1,nrow=n,ncol=m)
+	for (i in 1:m){
+		for (j in 1:n){
+			ParCov[j,i]=ker(X0[i,],X1[j,])
+		}
+	}
+	ParCov
+}
+
+pre_BLP<-function(tpairs,Sig,ParC,X,Z,sig=1){
+	n1=nrow(Sig)
+	n2=nrow(tpairs)
+	PC=matrix(NA,n2,n1)
+	for (i in 1:n2){
+		PC[i,]=ParC[tpairs[i,1],]-ParC[tpairs[i,2],]
+	}
+	invSig=solve(Sig)
+	out=sign(PC%*%invSig%*%solve(sig^2*invSig+t(X)%*%X)%*%t(X)%*%Z)
+	out
+}
+
+SA_BLP<-function(cDat,vcDat){
+	vZ=GetXZ(vcDat)$Z
+	kmax=3e3
+	tolc=1
+	sig_kappa=0.2
+	sig_sig=0.2
+	count=0
+	for (k in 1:kmax){
+		if (k==1){
+			#initialize
+			kappa=2
+			sig=1
+			ker=gen_ker(kappa)
+			Sig=getSigma(cDat$points,ker)
+			ParC=PartialCov(cDat$points,vcDat$points,ker)
+			q=sum(pre_BLP(vcDat$pairs,Sig,ParC,X,Z,sig=sig)!=vZ)
+
+		}
+		newkappa=abs(kappa+rnorm(1,0,sig_kappa))
+		newsig=abs(sig+rnorm(1,0,sig_sig))
+		newker=gen_ker(newkappa)
+		newSig=getSigma(cDat$points,newker)
+		newParC=PartialCov(cDat$points,vcDat$points,newker)
+		possibleErr=tryCatch(
+			{
+				newq=sum(pre_BLP(vcDat$pairs,newSig,newParC,X,Z,sig=newsig)!=vZ)
+				newq
+			},
+			error=function(e)e
+		)
+		if (inherits(possibleErr,"error")){
+			next
+		}
+		
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			sig=newsig
+			kappa=newkappa
+			q=newq
+			count=count+1
+		}
+		if ((k%%200)==0){
+
+			#adjust tol and sig by accept rate
+			accrate=count/200
+
+			if (accrate>0.2){
+				tolc=tolc*5
+			}
+			if (accrate<0.2){
+				sig_sig=sig_sig*0.8
+				sig_kappa=sig_kappa*0.8
+			}
+			if (accrate==0){
+				break
+			}
+			count=0
+		}
+	}
+	list(kappa=kappa,sig=sig,err=q/length(vZ))
+}
+
+SA_GP_v<-function(vcDat,fI0,cDat,kappa0=10,kmax=2e3){
+	sig=list(kappa=5) #initial jump sd
+	tolc=5 #initial tol
+	x=vcDat$points
+	x0=cDat$points
+	pairs=vcDat$pairs
+	kappa=kappa0
+	ker=gen_ker(kappa)
+	Sig=getSigma(x0,ker)
+	coSig=getcov(x,x0,ker)
+	n=nrow(x)
+	#initialize
+
+	fI=fI0
+	q=loss_GP(pre_GP(coSig,Sig,fI),pairs)
+	count=list(kappa=0)
+	#move
+	for (k in 1:kmax){
+		newkappa=abs(kappa+rnorm(1,0,sd=sig$kappa))
+		newker=gen_ker(newkappa)
+		newSig=getSigma(x0,newker)
+		newcoSig=getcov(x,x0,newker)
+		possibleErr=tryCatch(
+		{newq=loss_GP(pre_GP(newcoSig,newSig,fI),pairs)
+			newq},
+		error=function(e)e
+		)
+		if (inherits(possibleErr,"Error")){
+			next
+		}
+		temp=runif(1,0,1)
+		if (temp<(exp(tolc*(q-newq)))){
+			kappa=newkappa
+			q=newq
+			count$kappa=count$kappa+1
+			Sig=newSig
+		}
+		if ((k%%100)==0){
+			
+			
+			#adjust tol and sig by accept rate
+			accrate=list(kappa=count$kappa/100)
+		
+			if (accrate$kappa>0.2){
+				tolc=tolc*5
+			}
+			if (accrate$kappa<=0.2){
+				sig$kappa=sig$kappa*0.5
+			}
+			if (accrate$kappa==0){
+				break
+			}
+			count$kappa=0
+						
+			
+		}
+	}
+	list(kappa=kappa,q,fI=fI,Sig=Sig)
 }

@@ -1,196 +1,3 @@
-l1(Dat,p)
-l2=function(Dat,metric,p){#
-	#expectation of loss function#
-	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
-}#
-#
-l3=function(Dat,metric,p){#
-	#original loss function#
-	rhat=which.max(p)#
-	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
-}
-l2(Dat,metric,p)
-l2=function(Dat,metric,p){#
-	#expectation of loss function#
-	l=-matrix(Dat,1,3)%*%outer(1:3,1:3,metric)%*%as.matrix(p,1,3)#
-	return(l)#
-}#
-#
-l3=function(Dat,metric,p){#
-	#original loss function#
-	rhat=which.max(p)#
-	l=-matrix(Dat,1,3)%*%outer(1:3,rhat,metric)#
-	return(l)#
-}
-l2(Dat,metric,p)
-l3(Dat,metric,p)
-get_dens=function(Dat,metric,d=0.1){#
-	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
-	#metric is a function of the form f(x,y), which measures the distance between x and y#
-	#d is the distance between points in the output#
-	#there're 6 columns of outdata first 3 are p1,p2,p3#
-	#last 3 are corresponding 'likelihood'#
-	p1=seq(0,1,d)#
-	outDat=matrix(0,0,6)#
-	for (temp1 in p1){#
-		p2=seq(0,1-temp1,d)#
-		for (temp2 in p2){#
-			p=c(temp1,temp2,1-temp1-temp2)#
-			y1=l1(Dat,p)#
-			y2=l2(Dat,p)#
-			y3=l3(Dat,p)#
-			newdata=cbind(p,y1,y2,y3)#
-			outDat=rbind(outDat,newdata)#
-		}#
-	}#
-	#normalize outDat#
-	for (j in 4:6){#
-		outDat[,j]=outDat[,j]-max(outDat[,j])#
-		outDat[,j]=exp(outDat[,j])#
-	}#
-	return(outDat)#
-}
-getdens(Dat,metric)
-get_dens(Dat,metric)
-get_dens=function(Dat,metric,d=0.1){#
-	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
-	#metric is a function of the form f(x,y), which measures the distance between x and y#
-	#d is the distance between points in the output#
-	#there're 6 columns of outdata first 3 are p1,p2,p3#
-	#last 3 are corresponding 'likelihood'#
-	p1=seq(0,1,d)#
-	outDat=matrix(0,0,6)#
-	for (temp1 in p1){#
-		p2=seq(0,1-temp1,d)#
-		for (temp2 in p2){#
-			p=c(temp1,temp2,1-temp1-temp2)#
-			y1=l1(Dat,p)#
-			y2=l2(Dat,metric,p)#
-			y3=l3(Dat,metric,p)#
-			newdata=cbind(p,y1,y2,y3)#
-			outDat=rbind(outDat,newdata)#
-		}#
-	}#
-	#normalize outDat#
-	for (j in 4:6){#
-		outDat[,j]=outDat[,j]-max(outDat[,j])#
-		outDat[,j]=exp(outDat[,j])#
-	}#
-	return(outDat)#
-}
-get_dens(Dat,metric)
-p
-get_dens=function(Dat,metric,d=0.1){#
-	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
-	#metric is a function of the form f(x,y), which measures the distance between x and y#
-	#d is the distance between points in the output#
-	#there're 6 columns of outdata first 3 are p1,p2,p3#
-	#last 3 are corresponding 'likelihood'#
-	p1=seq(0,1,d)#
-	outDat=matrix(0,0,6)#
-	for (temp1 in p1){#
-		p2=seq(0,1-temp1,d)#
-		for (temp2 in p2){#
-			p=c(temp1,temp2,1-temp1-temp2)#
-			print(p)#
-			y1=l1(Dat,p)#
-			y2=l2(Dat,metric,p)#
-			y3=l3(Dat,metric,p)#
-			newdata=cbind(p,y1,y2,y3)#
-			outDat=rbind(outDat,newdata)#
-		}#
-	}#
-	#normalize outDat#
-	for (j in 4:6){#
-		outDat[,j]=outDat[,j]-max(outDat[,j])#
-		outDat[,j]=exp(outDat[,j])#
-	}#
-	return(outDat)#
-}
-p
-get_dens(Dat,metric)
-p=c(0,0,1)
-l1(Dat,p)
-Dat
-l2(Dat,metric,p)
-l3(Dat,metric,p)
-get_dens=function(Dat,metric,d=0.1){#
-	#Dat has length of 3, the numbers are appearance of ratings=1, 2 and 3#
-	#metric is a function of the form f(x,y), which measures the distance between x and y#
-	#d is the distance between points in the output#
-	#there're 6 columns of outdata first 3 are p1,p2,p3#
-	#last 3 are corresponding 'likelihood'#
-	p1=seq(0,1,d)#
-	outDat=matrix(0,0,6)#
-	for (temp1 in p1){#
-		p2=seq(0,1-temp1,d)#
-		for (temp2 in p2){#
-			p=c(temp1,temp2,1-temp1-temp2)#
-			y1=l1(Dat,p)#
-			y2=l2(Dat,metric,p)#
-			y3=l3(Dat,metric,p)#
-			newdata=cbind(matrix(p,1,3),y1,y2,y3)#
-			outDat=rbind(outDat,newdata)#
-		}#
-	}#
-	#normalize outDat#
-	for (j in 4:6){#
-		outDat[,j]=outDat[,j]-max(outDat[,j])#
-		outDat[,j]=exp(outDat[,j])#
-	}#
-	return(outDat)#
-}
-get_dens(Dat,metric)
-??mixexp
-??mixtureplot
-require(mixexp)
-figure()
-plot()
-par
-par()
-Quartz()
-??plot
-device()
-x11()
-x11(2)
-dev.new
-dev.new()
-dev(2)
-??dev
-Devices
-Devices()
-Devices(1)
-dev.new()
-??mixture
-Result=get_dens(Dat,metric)#
-#
-for (i=1:3){#
-	dev.new()#
-	MixturPlot(Result[,1],Result[,2],Result[,3],Result[,3+i])#
-}
-require(mixexp)
-for (i=1:3){#
-	dev.new()#
-	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i])#
-}
-MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)
-for (i=1:3){#
-	dev.new()#
-	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)#
-}
-for (i in 1:3){#
-	dev.new()#
-	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1)#
-}
-?MixturePlot
-for (i in 1:3){#
-	dev.new()#
-	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1",title=print(i) )#
-}
-for (i in 1:3){#
-	dev.new()#
-	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],mod=1,cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
-}
 for (i in 1:3){#
 	dev.new()#
 	MixturePlot(Result[,1],Result[,2],Result[,3],Result[,3+i],cols=TRUE,despts=FALSE, x3lab="p3",x2lab="p2",x1lab="p1")#
@@ -1587,277 +1394,2009 @@ n=512*vc/(eps^2)*log(256*vc/(eps^2))#
 n^vc#
 exp((n*eps^2)/256)
 1-pnorm(1.776)
-setwd("./Desktop/ranking/code/GP_Gibbs/")
-Names=c("pyrim","triazines","machine","housing","abalone")#
-N=c(100,300,500,700,1000)#
-nameind=2#
-Name=Names[nameind]#
-datname=sprintf("%s.data",Name)#
-domname=sprintf("%s.domain",Name)#
-Dat=read.table(file=datname,sep=",")#
-colnames(Dat)=read.table(file=domname,sep=":")$V1#
-source("./functions.R")#
-nc=ncol(Dat)#
-y=Dat[,nc]#
-Dat=Dat[,1:(nc-1)]#
+test<-function(a,b){#
+	line<-function(x){#
+		y=a+b*x#
+		y#
+	}#
+	line#
+}
+l1=test(1,2)
+l1
+l1(5)
+setwd("./Desktop/ranking/code/binary_BLP/")
+source("./binary_functions.R")#
 #
-m=N[nameind] #number of pairs in training data#
-tm=2000 #number of pairs in testing data#
-Pow=10:10#
-K=5:5#
+##plot the case in 1 dimension#
+t=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+source("./binary_functions.R")#
 #
-TE1=list(NA)#
-TE2=list(NA)#
-E1=matrix(NA,nrow=length(Pow),ncol=length(K))#
-E2=E1#
-for (ite in 1:1){#
-	newDat=samplepairs(m,Dat,y)#
-	tDat=samplepairs(tm,Dat,y)#
-	#sieve approach#
-	nDat=normto1(newDat)#
-	norDat=nDat$normDat#
-	ranDat=nDat$ran#
-	ntDat=normbyran(tDat,ranDat)#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+library(mvtnorm)#to generate multivariate normal r.v#
+#
+gen_ker<-function(kappa=2){#
+	#function to generate kernel function specified by kappa#
+	ker<-function(x1,x2){#
+		#kernal function to generate Sigma#
+		k=sum((x1-x2)^2)#
+		K=exp(-kappa*k/2)#
+		K#
+	}#
+	ker#
+}#
+#
+getSigma<-function(x,ker){#
+	#Get the covariance function given x values and kernel#
+	x=as.matrix(x)#
+	n=nrow(x)#
+	Sigma=matrix(1,n,n)#
+	for (i in 2:n){#
+		for (j in 1:(i-1)){#
+			Sigma[i,j]=ker(x[i,],x[j,])#
+			Sigma[j,i]=Sigma[i,j]#
+		}#
+	}	#
+	Sigma#
+}#
+#
+getcov<-function(x0,x1,ker){#
+	#Return a matrix where (i,j)th entry is K(x1_i,x0_j)#
+	x0=as.matrix(x0)#
+	x1=as.matrix(x1)#
+	n0=nrow(x0)#
+	n1=nrow(x1)#
+	Cov=matrix(1,n1,n0)#
+	for (i in 1:n0){#
+		for (j in 1:n1){#
+			Cov[j,i]=ker(x1[j,],x0[i,])#
+		}#
+	}#
+	Cov#
+}#
+gen_bin_data<-function(n,p,type=1,errsd=0){#
+	#generate a dataset with n observations and p covaraites#
+	#the binary value of Y is decided by x in 2 ways:#
+	#type=1: Y=I(sum(b_i*x_i>0)), where x_i is the ith covariate of x#
+	#type=2: Y=I(sum(b_i*x_i^2>mean(b_i*x_i^2)))#
+	#all of the x are from Unif(0,10),b are from N(0,1)#
+	x=matrix(runif(n*p)*10-5,n,p)#
+	b=rnorm(p)#
+	if (type==1){#
+		f=x%*%b+rnorm(n,0,errsd)#
+	}else if (type==2){#
+		f=x^2%*%b+rnorm(n,0,errsd)#
+		f=f-mean(f)#
+	}else if (type==3){#
+		f=sin(x%*%b+rnorm(n,0,errsd)#
+)#
+	}#
+	Y=I(f>0)*2-1#
+	Dat=cbind(x,Y)#
+	list(Dat=Dat,f=f)#
+}#
+#
+pre_bin_BLP<-function(y,Sig,Cov,sig){#
+	est=get_f(y,Sig,Cov,sig)#
+	est=I(est>0)*2-1#
+	est#
+}#
+get_f<-function(y,Sig,Cov,sig){#
+	inv_sig=solve(Sig)#
+	est=Cov%*%inv_sig%*%solve(inv_sig+diag(ncol(Sig)))%*%y#
+}#
+geterr<-function(Dat,tDat,kappa,sig){#
+	p=ncol(Dat)#
+	x=Dat[,1:(p-1)]#
+	y=Dat[,p]#
+	tx=as.matrix(tDat[,1:(p-1)])#
+	ty=as.matrix(tDat[,p])#
+	ker=gen_ker(kappa)#
+	Sig=getSigma(x,ker)#
+	Cov=getcov(x,tx,ker)#
+	est=pre_bin_BLP(y,Sig,Cov,sig)#
+	l=sum(est!=ty)#
+	l#
+}#
+SA_bin_BLP<-function(Dat,vDat){#
+	#simulated annealing method to find proper values of sigma and kappa#
+	#Dat is the training data#
+	#vDat is the validating data#
+	kmax=5e3#
+	p=ncol(Dat)#
+	Y=Dat[,p]#
+	vY=vDat[,p]#
+	x=as.matrix(Dat[,1:p-1])#
+	vx=as.matrix(vDat[,1:p-1])#
+	p=p-1#
+	#tolc,sig_kappa,sig_sig are parameters used by simulated annealing alg#
+	tolc=1#
+	sig_kappa=5#
+	sig_sig=1#
+	count=0#
+	errcount=0#
+	for (k in 1:kmax){#
+		if (k==1){#
+			#initialize#
+			kappa=20#
+			sig=1#
+			ker=gen_ker(kappa)#
+			Sig=getSigma(x,ker)#
+			Cov=getcov(x,vx,ker)#
+			#vYhat is the estimated values of Y based on data in validation set#
+			vYhat=pre_bin_BLP(Y,Sig,Cov,sig)#
+			l=sum(vYhat!=vY)#
+			newl=Inf#
+		}#
+		newkappa=abs(kappa+rnorm(1,0,sig_kappa))#
+		newsig=abs(sig+rnorm(1,0,sig_sig))#
+		newker=gen_ker(newkappa)#
+		newSig=getSigma(x,newker)#
+		newCov=getcov(x,vx,newker)#
+		PossibleErr=tryCatch({#
+			newvYhat=pre_bin_BLP(Y,newSig,newCov,newsig)#
+			newl=sum(newvYhat!=vY)#
+		},error=function(e){#
+			errcount=errcount+1#
+			e})#
+		if (inherits(PossibleErr,"Error")){#
+			next#
+		}#
+		temp=runif(1,0,1)#
+		if (temp<(exp(tolc*(l-newl)))){#
+			sig=newsig#
+			kappa=newkappa#
+			l=newl#
+			count=count+1#
+		}#
+		if((k%%200)==0){#
+			#adjust tol and sig by accept rate#
+			accrate=count/200#
+			if(accrate>0.5){#
+				tolc=tolc*5#
+			}else{#
+				sig_sig=sig_sig*0.8#
+				sig_kappa=sig_kappa*0.8#
+			}#
+			count=0#
+		}#
+	}#
+	list(kappa=kappa,sig=sig,err=l/length(vY))#
+}
+source("./binary_functions.R")#
+#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+source("./binary_functions.R")
+source("./binary_functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+nt=200#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
 	i=1#
-	for (pow in Pow){#
+	for (t in 1:2){#
 		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)#
+		for (m in c(100,500)){#
+			#n0 is the size of 'total' training set#
+			#nt is the size of testing set#
+			#n1 is the size of 'true' training set#
+			#n2 is the size of validating set#
+			n1=m*0.5#
+			n2=m-n1#
+			rep=10#
+			totalDat=gen_bin_data(m+nt,p,t)#
+			Dat=totalDat[1:n1,]#
+			vDat=totalDat[(n1+1):(n1+n2),]#
+			tDat=totalDat[(m+1):(m+nt),]#
+			#calculate proper value of sigma and kappa#
+			result=SA_bin_BLP(Dat,vDat)#
+			e1=geterr(Dat,tDat,result$kappa,result$sig)/nt#
+			e2=geterr(Dat,vDat,result$kappa,result$sig)/n2#
+			e3=geterr(Dat,Dat,result$kappa,result$sig)/n1#
+			print (sprintf("p:%i, t:%i, m: %i",p,t,m))#
+			print (sprintf("testing error: %f, validating error: %f, training error: %f.",e1,e2,e3))	#
 			E1[i,j]=e1#
-			E2[i,j]=e2#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
 			j=j+1#
 		}#
 		i=i+1#
 	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2	#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+save(TE1,TE2,TE3,file="./binary_BLP.Rdata")
+totalDat=gen_bin_data(m+nt,p,t)$Dat
+source("./binary_functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+nt=200#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:2){#
+		j=1#
+		for (m in c(100,500)){#
+			#n0 is the size of 'total' training set#
+			#nt is the size of testing set#
+			#n1 is the size of 'true' training set#
+			#n2 is the size of validating set#
+			n1=m*0.5#
+			n2=m-n1#
+			rep=10#
+			totalDat=gen_bin_data(m+nt,p,t)$Dat#
+			Dat=totalDat[1:n1,]#
+			vDat=totalDat[(n1+1):(n1+n2),]#
+			tDat=totalDat[(m+1):(m+nt),]#
+			#calculate proper value of sigma and kappa#
+			result=SA_bin_BLP(Dat,vDat)#
+			e1=geterr(Dat,tDat,result$kappa,result$sig)/nt#
+			e2=geterr(Dat,vDat,result$kappa,result$sig)/n2#
+			e3=geterr(Dat,Dat,result$kappa,result$sig)/n1#
+			print (sprintf("p:%i, t:%i, m: %i",p,t,m))#
+			print (sprintf("testing error: %f, validating error: %f, training error: %f.",e1,e2,e3))	#
+			E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+save(TE1,TE2,TE3,file="./binary_BLP.Rdata")
+TE1
+source("./binary_functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+nt=200#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:2){#
+		j=1#
+		for (m in c(100,500)){#
+			#n0 is the size of 'total' training set#
+			#nt is the size of testing set#
+			#n1 is the size of 'true' training set#
+			#n2 is the size of validating set#
+			n1=m*0.5#
+			n2=m-n1#
+			rep=10#
+			totalDat=gen_bin_data(m+nt,p,t)$Dat#
+			Dat=totalDat[1:n1,]#
+			vDat=totalDat[(n1+1):(n1+n2),]#
+			tDat=totalDat[(m+1):(m+nt),]#
+			#calculate proper value of sigma and kappa#
+			result=SA_bin_BLP(Dat,vDat)#
+			e1=geterr(Dat,tDat,result$kappa,result$sig)/nt#
+			e2=geterr(Dat,vDat,result$kappa,result$sig)/n2#
+			e3=geterr(Dat,Dat,result$kappa,result$sig)/n1#
+			print (sprintf("p:%i, t:%i, m: %i",p,t,m))#
+			print (sprintf("testing error: %f, validating error: %f, training error: %f.",e1,e2,e3))	#
+			E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+save(TE1,TE2,TE3,file="./binary_BLP.Rdata")
+source("./binary_functions.R")#
+#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+source("./binary_functions.R")#
+#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+source("./binary_functions.R")#
+#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+inherits(PossibleErr,"Error")
+kappa=2#
+			sig=1#
+			ker=gen_ker(kappa)#
+			Sig=getSigma(x,ker)#
+			Cov=getcov(x,vx,ker)#
+			#vYhat is the estimated values of Y based on data in validation set#
+			Err=T
+while (Err==T){#
+				PossibleErr=tryCatch(#
+				{#
+					vYhat=pre_bin_BLP(Y,Sig,Cov,sig)#
+				},#
+				error=function(e){#
+					print (e)#
+					e	#
+				}#
+				)#
+				print (PossibleErr)
+Err=inherits(PossibleErr,"Error")#
+				print(Err)#
+				if (Err){#
+					kappa=kappa+5#
+					ker=gen_ker(kappa)#
+					Sig=getSigma(x,ker)#
+					Cov=getcov(x,vx,ker)#
+				}#
+			}
+?inherits
+class(PossibleErr)
+inherits(PossibleErr,"error")
+source("./binary_functions.R")#
+#
+##plot the case in 1 dimension#
+t=1#
+p=1#
+m=100#
+nt=100#
+n1=m*0.5#
+n2=m-n1#
+Gen=gen_bin_data(m+nt,p,3,0)#
+totalDat=Gen$Dat#
+Dat=totalDat[1:n1,]#
+vDat=totalDat[(n1+1):(n1+n2),]#
+tDat=totalDat[(m+1):(m+nt),]#
+#calculate proper value of sigma and kappa#
+result=SA_bin_BLP(Dat,vDat)#
+ker=gen_ker(result$kappa)#
+x=as.matrix(seq(-5,5,0.01))#
+plot(x,get_f(Dat[,2],getSigma(Dat[,1],ker),getcov(Dat[,1],x,ker),result$sig),ylim=c(-1,1),type='l')#
+points(totalDat[,1],Gen$f/max(abs(Gen$f)))#
+geterr(Dat,tDat,result$kappa,result$sig)
+rm(list=ls())
+setwd("../GP_Gibbs/")
+ls
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=2000#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
+		j=1#
+		for (m in c(100,500)){#
+			m1=10#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
+			print(msg)#
+			msg1=sprintf("kappa: %f",result$kappa)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
 }#
 #
-savefile=sprintf("%s_s%i.Rdata",Name,nameind)#
-save(TE1,TE2,file=savefile)
-setwd("./../../result/06-06-2014/")
-Names=c("pyrim","triazines","machine","housing","abalone")#
-Err=list#
-E1=list()#
-E2=list()#
-for (i in 1:5){#
-	load(sprintf("./%s_s%i.Rdata",Names[i],i))#
-#
-	E1[[i]]=TE1[[1]]#
-	E2[[i]]=TE2[[1]]#
-	for (j in 2:length(TE1)){#
-		E1[[i]]=E1[[i]]+TE1[[j]]#
-		E2[[i]]=E2[[i]]+TE2[[j]]#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=2000#
+l=1#
+for (p in c(20)){#
+	E1=matrix(NA,5)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
+		j=1#
+		for (m in c(100,500)){#
+			m1=10#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
+			print(msg)#
+			msg1=sprintf("kappa: %f",result$kappa)#
+			print(msg1)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
 	}#
-	E1[[i]]=E1[[i]]/length(TE1)#
-	E2[[i]]=E2[[i]]/length(TE2)#
-	m=min(min(E1[[i]]))#
-	location=which.min(E1[[i]])#
-	location=c(location%/%5+1,location%%5)#
-	print(sprintf("lowest testing err: %f",m))#
-	print(sprintf("corresponding training err: %f",E2[[i]][E1[[i]]==m]))#
-	print(location)#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
 }#
-names(E1)=Names#
-names(E2)=Names
-setwd("../../code/GP_Gibbs/")
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-loss_s(b,sDat)
-m
-m=300
-58/300
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-Pow=3:3:#
-K=5:5
-i=1#
-	for (pow in Pow){#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+jj
+j
+i
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=2000#
+l=1#
+for (p in c(20)){#
+	E1=matrix(NA,5,1)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
 		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
+		for (m in c(100,500)){#
+			m1=10#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
 			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			msg1=sprintf("kappa: %f",result$kappa)#
 			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
 			print(msg2)#
 			E1[i,j]=e1#
-			E2[i,j]=e2#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
 			j=j+1#
 		}#
 		i=i+1#
 	}#
-	TE1[[ite]]=E1#
-	TE2[[ite]]=E2
-k
-i=1#
-	for (pow in Pow){#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+j
+i
+m1=10#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)
+result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points
+kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1
+i
+j
+E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3
+E1
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=2000#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
 		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
+		for (m in c(100,500)){#
+			m1=10#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
 			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			msg1=sprintf("kappa: %f",result$kappa)#
 			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
 			print(msg2)#
 			E1[i,j]=e1#
-			E2[i,j]=e2#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
 			j=j+1#
 		}#
 		i=i+1#
-	}
-for (pow in Pow){#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=2000#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
 		j=1#
-		for (k in K){#
-			SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
+		for (m in c(100,500)){#
+			m1=3#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
 			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			msg1=sprintf("kappa: %f",result$kappa)#
 			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
 			print(msg2)#
 			E1[i,j]=e1#
-			E2[i,j]=e2#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
 			j=j+1#
 		}#
 		i=i+1#
-	}
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=200#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
+		j=1#
+		for (m in c(100,500)){#
+			m1=3#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
 			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			msg1=sprintf("kappa: %f",result$kappa)#
 			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-Pow=3:3#
-K=10:10
-result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-k
-k=10
-pow
-pow=3
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
 			print(msg2)#
 			E1[i,j]=e1#
-			E2[i,j]=e2#
-			j=j+1
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+source("./functions.R")#
+TE1=list(p3=NULL,p20=NULL)#
+TE2=list(p3=NULL,p20=NULL)#
+TE3=list(p3=NULL,p20=NULL)#
+mt=200#
+l=1#
+for (p in c(3,20)){#
+	E1=matrix(NA,5,2)#
+	E2=E1#
+	E3=E1#
+	i=1#
+	for (t in 1:5){#
+		j=1#
+		for (m in c(100,500)){#
+			m1=1#
+			m2=m-m1#
+			Gen=gendata(150,p,type=t)#
+			Dat=Gen$Dat#
+			nc=ncol(Dat)#
+			y=Dat[,nc]#
+			Dat=Dat[,1:(nc-1)]#
+			#generate training data and calculate X,Z#
+			newDat=samplepairs(m1,Dat,y)#
+			valDat=samplepairs(m2,Dat,y)#
+			tesDat=samplepairs(mt,Dat,y)#
+			cDat=convertDat(newDat)#
+			vcDat=convertDat(valDat)#
+			tcDat=convertDat(tesDat)#
+			result0=SA_GP(cDat,2,kmax=1e4)#
+			result=SA_GP_v(vcDat,result0$fI,cDat,kmax=1e3)#
+			x=cDat$points#
+			kappa=result$kappa#
+			ker=gen_ker(kappa)#
+			fI=result$fI#
+			Sig=result$Sig#
+			pre=pre_GP(getcov(tcDat$points,x,ker),Sig,fI)#
+			e1=loss_GP(pre,tcDat$pairs)/mt#
+			e2=loss_GP(pre_GP(getcov(vcDat$points,x,ker),Sig,fI),vcDat$pairs)/m2#
+			e3=loss_GP(fI,cDat$pairs)/m1#
+			msg=sprintf("p: %i, type: %i, m: %i ", p,t,m)#
 			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
+			msg1=sprintf("kappa: %f",result$kappa)#
 			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-k
-k=15
-pow
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-SDat=spl(norDat,pow,k,ntDat)#
-			sDat=SDat$sDat#
-			stDat=SDat$stDat#
-			result=SA_s(sDat,2)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
-result=SA_s(sDat,2,b0=b)#
-			b=result$b#
-			e1=loss_s(b,stDat)/tm#
-			e2=loss_s(b,sDat)/m#
-			msg=sprintf("it: %i", ite)#
-			print(msg)#
-			msg1=sprintf("power: %f, nknots: %f",pow,k)#
-			print(msg1)#
-			msg2=sprintf("testing err: %f, training err: %f",e1,e2)#
-			print(msg2)
+			msg2=sprintf("testing err: %f, validating err: %f, training err: %f",e1,e2,e3)#
+			print(msg2)#
+			E1[i,j]=e1#
+			E2[i,j]=e2	#
+			E3[i,j]=e3#
+			j=j+1#
+		}#
+		i=i+1#
+	}#
+	TE1[[l]]=E1#
+	TE2[[l]]=E2#
+	TE3[[l]]=E3#
+	l=l+1#
+}#
+#
+save(TE1,TE2,TE3,file="./simu_GPv.Rdata")
+rm(list=ls())
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,1.9,2,2.1,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,20)){#
+		obs_y=c(-1,-1,1.5,-0.5,1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,20)){#
+		obs_y=c(1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(0.1,20)){#
+		obs_y=c(1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(0.1,50)){#
+		obs_y=c(1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,2,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(0.1,50)){#
+		obs_y=c(1,1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,2,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(0.01,50)){#
+		obs_y=c(1,1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,2,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,50)){#
+		obs_y=c(1,1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=c(1,2,3)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,100)){#
+		obs_y=c(1,1,-1)*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(-3,3,0.1)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,100)){#
+		obs_y=rnorm(length(obs_x))*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(-3,3,0.5)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+for (const in c(0.5,1)){#
+	for (ka in c(1,100)){#
+		obs_y=rnorm(length(obs_x))*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(-3,3,0.5)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(0.5,1)){#
+	for (ka in c(1,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(0,5,0.5)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(0.5,1)){#
+	for (ka in c(1,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(0,5,0.5)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(0,5,0.5)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(0,5,0.1)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,5,0.1)#
+obs_x=seq(0,5,0.2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,10,0.1)#
+obs_x=seq(0,10,0.2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.1)#
+obs_x=seq(0,100,0.2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,5)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,2)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,1)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+dev()
+new(dev)
+new.dev()
+dev.new()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,20)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,20)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(0.01,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(0.01,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,2)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(0.1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
+dev(1)
+quartz(1)
+dev.new()
+kernel1<-function(x1,x2,kappa=1){#
+	#kernal function to generate Sigma#
+	k=sum((x1-x2)^2)#
+	K=exp(-kappa*k/2)#
+	K#
+}#
+getcov<-function(xt,x,ker=kernel1,k){#
+	#x is all the observed n (we use 2m here) locations and xt is the new pair#
+	x=as.matrix(x)#
+	xt=as.matrix(xt)#
+	n=nrow(x)#
+	m=nrow(xt)#
+	Sigma=matrix(1,n,m)#
+	for (i in 1:n){#
+		for (j in 1:m){#
+			Sigma[i,j]=ker(x[i,],xt[j,],kappa=k)#
+		}#
+	}#
+	Sigma#
+}#
+gpest<-function(est_x,obs_x,obs_y,kappa){#
+	est_y=t(getcov(est_x,obs_x,k=kappa))%*%solve(getcov(obs_x,obs_x,k=kappa))%*%matrix(obs_y,ncol=1)#
+	est_y#
+}#
+#
+est_x=seq(0,100,0.5)#
+obs_x=seq(0,100,20)#
+#
+#png("GP_illustration.png")#
+par(mfrow=c(2,2))#
+obs_y0=rnorm(length(obs_x))*const#
+for (const in c(1)){#
+	for (ka in c(0.1,5,20,100)){#
+		obs_y=obs_y0*const#
+		est_y=gpest(est_x,obs_x,obs_y,ka)#
+		plot(est_x,est_y,type='l',xlab="x",ylab="f(x)",main=sprintf("c=%.1f,kappa=%.1f",const,ka))#
+		points(obs_x,obs_y)#
+	}#
+}#
+#dev.off()
